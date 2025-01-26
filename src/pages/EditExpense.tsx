@@ -1,72 +1,60 @@
-// src/pages/EditExpense.tsx
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getExpenseById, updateExpense } from "../services/expenseService";
-import { Expense } from "../types/Expense";
+import React, { useEffect, useState } from "react"
+import { useParams, useNavigate } from "react-router-dom"
+import { getExpenseById, updateExpense } from "../services/expenseService"
+import { Expense } from "../types/Expense"
 
-const EditExpense: React.FC = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [expenseData, setExpenseData] = useState<Expense | null>(null);
+function EditExpense() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const [expenseData, setExpenseData] = useState<Expense | null>(null)
 
   useEffect(() => {
-    const expenseId = Number(id);
-    if (!expenseId) {
-      console.error("ID de egreso inválido:", id);
-      navigate("/app/expenses");
-      return;
+    const parsedId = Number(id)
+    if (!parsedId) {
+      navigate("/app/expenses")
+      return
     }
-
-    const found = getExpenseById(expenseId);
-    if (found) {
-      setExpenseData(found);
-    } else {
-      alert("Egreso no encontrado");
-      navigate("/app/expenses");
+    const found = getExpenseById(parsedId)
+    if (!found) {
+      navigate("/app/expenses")
+      return
     }
-  }, [id, navigate]);
+    setExpenseData(found)
+  }, [id, navigate])
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    if (!expenseData) return;
-    setExpenseData({ ...expenseData, [e.target.name]: e.target.value });
-  };
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    if (!expenseData) return
+    setExpenseData({ ...expenseData, [e.target.name]: e.target.value })
+  }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!expenseData) return;
-
-    updateExpense(expenseData);
-    alert("Egreso actualizado correctamente");
-    navigate("/app/expenses");
-  };
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!expenseData) return
+    updateExpense(expenseData)
+    alert("Egreso actualizado correctamente")
+    navigate("/app/expenses")
+  }
 
   if (!expenseData) {
-    return (
-      <div className="container">
-        <p>Cargando datos...</p>
-      </div>
-    );
+    return <div className="container mt-4">Cargando...</div>
   }
 
   return (
     <div className="container mt-4">
-      <h2>Editar Gasto</h2>
+      <h2>Editar Egreso</h2>
       <form className="row g-3" onSubmit={handleSubmit}>
         <div className="col-md-6">
-          <label className="form-label">Fecha (dd-mm-yyyy):</label>
+          <label className="form-label">Fecha</label>
           <input
-            type="text"
+            type="date"
             name="date"
             className="form-control"
             value={expenseData.date}
             onChange={handleChange}
           />
         </div>
-
         <div className="col-md-6">
-          <label className="form-label">Monto:</label>
+          <label className="form-label">Monto</label>
           <input
             type="number"
             name="amount"
@@ -75,9 +63,8 @@ const EditExpense: React.FC = () => {
             onChange={handleChange}
           />
         </div>
-
         <div className="col-md-6">
-          <label className="form-label">Categoría:</label>
+          <label className="form-label">Categoría</label>
           <select
             name="category"
             className="form-select"
@@ -89,9 +76,8 @@ const EditExpense: React.FC = () => {
             <option value="Ocio">Ocio</option>
           </select>
         </div>
-
         <div className="col-md-6">
-          <label className="form-label">Descripción:</label>
+          <label className="form-label">Descripción</label>
           <input
             type="text"
             name="description"
@@ -100,7 +86,6 @@ const EditExpense: React.FC = () => {
             onChange={handleChange}
           />
         </div>
-
         <div className="col-12">
           <button type="submit" className="btn btn-primary">
             Guardar
@@ -108,7 +93,7 @@ const EditExpense: React.FC = () => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default EditExpense;
+export default EditExpense

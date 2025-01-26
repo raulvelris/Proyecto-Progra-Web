@@ -1,30 +1,34 @@
-import React from "react";
+import React from "react"
 
-interface ExpenseFilterProps {
-  filterCategory: string;
-  setFilterCategory: (val: string) => void;
-  filterDate: string;
-  setFilterDate: (val: string) => void;
-  filterAmount: number | null;
-  setFilterAmount: (val: number | null) => void;
+interface Props {
+  filterCategory: string
+  setFilterCategory: (val: string) => void
+  filterDate: string
+  setFilterDate: (val: string) => void
+  filterAmount: number | null
+  setFilterAmount: (val: number | null) => void
 }
 
-const ExpenseFilter: React.FC<ExpenseFilterProps> = ({
+function ExpenseFilter({
   filterCategory,
   setFilterCategory,
   filterDate,
   setFilterDate,
   filterAmount,
-  setFilterAmount,
-}) => {
+  setFilterAmount
+}: Props) {
+  function handleAmount(e: React.ChangeEvent<HTMLInputElement>) {
+    setFilterAmount(e.target.value ? parseFloat(e.target.value) : null)
+  }
+
   return (
     <div className="row gx-2 gy-1">
       <div className="col-auto">
         <label className="form-label mb-0">Categoría:</label>
         <select
-          value={filterCategory}
-          onChange={(e) => setFilterCategory(e.target.value)}
           className="form-select form-select-sm"
+          value={filterCategory}
+          onChange={e => setFilterCategory(e.target.value)}
         >
           <option value="">Todas</option>
           <option value="Alimentación">Alimentación</option>
@@ -32,34 +36,26 @@ const ExpenseFilter: React.FC<ExpenseFilterProps> = ({
           <option value="Ocio">Ocio</option>
         </select>
       </div>
-
-      {/* Fecha */}
       <div className="col-auto">
-        <label className="form-label mb-0">Fecha (dd-mm-yyyy):</label>
+        <label className="form-label mb-0">Fecha exacta:</label>
         <input
-          type="text"
-          placeholder="Ej: 18-12-2021"
-          value={filterDate}
-          onChange={(e) => setFilterDate(e.target.value)}
+          type="date"
           className="form-control form-control-sm"
+          value={filterDate}
+          onChange={e => setFilterDate(e.target.value)}
         />
       </div>
-
-      {/* Monto */}
       <div className="col-auto">
         <label className="form-label mb-0">Monto exacto:</label>
         <input
           type="number"
-          placeholder="Ej: 2000"
-          value={filterAmount === null ? "" : filterAmount}
-          onChange={(e) =>
-            setFilterAmount(e.target.value ? Number(e.target.value) : null)
-          }
           className="form-control form-control-sm"
+          value={filterAmount === null ? "" : filterAmount}
+          onChange={handleAmount}
         />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ExpenseFilter;
+export default ExpenseFilter

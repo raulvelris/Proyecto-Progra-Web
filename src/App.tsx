@@ -1,9 +1,10 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Expenses from "./pages/Expenses";
-import EditExpense from "./pages/EditExpense";
-import Sidebar from "./components/Sidebar";
+import React from "react"
+import { Routes, Route } from "react-router-dom"
+import Sidebar from "./components/Sidebar"
+import Dashboard from "./pages/Dashboard"
+import Expenses from "./pages/Expenses"
+import EditExpense from "./pages/EditExpense"
+import "bootstrap/dist/css/bootstrap.min.css"
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         </Routes>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

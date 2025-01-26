@@ -1,40 +1,38 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { getExpenses, deleteExpense } from "../services/expenseService";
-import { Expense } from "../types/Expense";
-import ExpenseFilter from "../components/ExpenseFilter";
+import React, { useState, useMemo, useEffect } from "react"
+import { Link } from "react-router-dom"
+import { getExpenses, deleteExpense } from "../services/expenseService"
+import { Expense } from "../types/Expense"
+import ExpenseFilter from "../components/ExpenseFilter"
 
-const Expenses: React.FC = () => {
-  const [allExpenses, setAllExpenses] = useState<Expense[]>([]);
-
-  const [filterCategory, setFilterCategory] = useState("");
-  const [filterDate, setFilterDate] = useState("");
-  const [filterAmount, setFilterAmount] = useState<number | null>(null);
+function Expenses() {
+  const [allExpenses, setAllExpenses] = useState<Expense[]>([])
+  const [filterCategory, setFilterCategory] = useState("")
+  const [filterDate, setFilterDate] = useState("")
+  const [filterAmount, setFilterAmount] = useState<number | null>(null)
 
   useEffect(() => {
-    setAllExpenses(getExpenses());
-  }, []);
+    setAllExpenses(getExpenses())
+  }, [])
 
   const filteredExpenses = useMemo(() => {
-    return allExpenses.filter((exp) => {
-      const matchCat = !filterCategory || exp.category === filterCategory;
-      const matchDate = !filterDate || exp.date === filterDate;
-      const matchAmount = filterAmount === null || exp.amount === filterAmount;
-      return matchCat && matchDate && matchAmount;
-    });
-  }, [allExpenses, filterCategory, filterDate, filterAmount]);
+    return allExpenses.filter(e => {
+      const catOk = !filterCategory || e.category === filterCategory
+      const dateOk = !filterDate || e.date === filterDate
+      const amountOk = filterAmount === null || e.amount === filterAmount
+      return catOk && dateOk && amountOk
+    })
+  }, [allExpenses, filterCategory, filterDate, filterAmount])
 
-  const handleDelete = (id: number) => {
-    if (window.confirm("¿Está seguro de eliminar?")) {
-      deleteExpense(id);
-      setAllExpenses(getExpenses());
+  function handleDelete(id: number) {
+    if (window.confirm("¿Eliminar este egreso?")) {
+      deleteExpense(id)
+      setAllExpenses(getExpenses())
     }
-  };
+  }
 
   return (
     <div className="container mt-4">
       <h2>Mis Gastos</h2>
-
       <div className="d-flex justify-content-between align-items-center my-3">
         <ExpenseFilter
           filterCategory={filterCategory}
@@ -46,35 +44,28 @@ const Expenses: React.FC = () => {
         />
         <button className="btn btn-primary">+ Agregar</button>
       </div>
-
       <table className="table table-bordered">
         <thead className="table-light">
           <tr>
             <th>Fecha</th>
+            <th>Monto</th>
             <th>Categoría</th>
             <th>Descripción</th>
-            <th>Monto</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {filteredExpenses.map((exp) => (
-            <tr key={exp.id}>
-              <td>{exp.date}</td>
-              <td>{exp.category}</td>
-              <td>{exp.description}</td>
-              <td>S/. {exp.amount.toFixed(2)}</td>
+          {filteredExpenses.map(e => (
+            <tr key={e.id}>
+              <td>{e.date}</td>
+              <td>{e.amount}</td>
+              <td>{e.category}</td>
+              <td>{e.description}</td>
               <td>
-                <Link
-                  to={`/app/expenses/edit/${exp.id}`}
-                  className="btn btn-warning btn-sm me-2"
-                >
+                <Link to={`/app/expenses/edit/${e.id}`} className="btn btn-warning btn-sm me-2">
                   &#9998;
                 </Link>
-                <button
-                  onClick={() => handleDelete(exp.id)}
-                  className="btn btn-danger btn-sm"
-                >
+                <button onClick={() => handleDelete(e.id)} className="btn btn-danger btn-sm">
                   &#128465;
                 </button>
               </td>
@@ -82,15 +73,13 @@ const Expenses: React.FC = () => {
           ))}
           {filteredExpenses.length === 0 && (
             <tr>
-              <td colSpan={5} className="text-center">
-                No hay registros
-              </td>
+              <td colSpan={5} className="text-center">No hay registros</td>
             </tr>
           )}
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}
 
-export default Expenses;
+export default Expenses
