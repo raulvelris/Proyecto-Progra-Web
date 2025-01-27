@@ -1,3 +1,5 @@
+// src/pages/EditExpense.tsx
+
 import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { getExpenseById, updateExpense } from "../services/expenseService"
@@ -24,7 +26,11 @@ function EditExpense() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     if (!expenseData) return
-    setExpenseData({ ...expenseData, [e.target.name]: e.target.value })
+    let value: string | number = e.target.value
+    if (e.target.name === "amount") {
+      value = parseFloat(e.target.value) || 0
+    }
+    setExpenseData({ ...expenseData, [e.target.name]: value })
   }
 
   function handleSubmit(e: React.FormEvent) {
