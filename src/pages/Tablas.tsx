@@ -1,11 +1,11 @@
 import React from "react"
-import ExpenseCharts from "../components/ExpenseCharts"
+import Graficos from "../components/Graficos"
 
 function Dashboard() {
   return (
     <div className="container mt-4">
       <h2>Dashboard</h2>
-      <ExpenseCharts />
+      <Graficos />
     </div>
   )
 }
