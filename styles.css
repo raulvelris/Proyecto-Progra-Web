@@ -1,0 +1,49 @@
+/* Estilos generales */
+body {
+    font-family: 'Arial', sans-serif; /* Cambiar fuente por defecto si es necesario */
+}
+
+/* Estilización del botón */
+button {
+    transition: transform 0.2s ease-in-out;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+/* Fondo de la barra lateral (importante) */
+.w-64 {
+    background: linear-gradient(to bottom, #e0f7fa, #b2ebf2);
+}
+
+/* Bordes personalizados */
+.rounded-lg {
+    border-radius: 1rem;
+}
+
+/* Texto de la barra lateral */
+nav a {
+    font-weight: bold;
+}
+
+/* Cambios en hover para enlaces */
+nav a:hover {
+    color: #0077b6;
+    text-decoration: underline;
+}
+
+/* Cambios adicionales para el modo responsive */
+@media (max-width: 768px) {
+    .w-64 {
+        width: 100%;
+    }
+
+    .flex {
+        flex-direction: column;
+    }
+
+    .flex-1 {
+        padding: 4px;
+    }
+}

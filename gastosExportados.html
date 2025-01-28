@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Gastos</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex">
+        <!-- Columna de Enlaces -->
+        <div class="w-64 bg-blue-50 p-4 min-h-screen">
+            <div class="flex items-center space-x-4 mb-6">
+                <img src="" alt="Avatar" class="rounded-full w-12 h-12">
+                <div>
+                    <h2 class="text-lg font-semibold">Usuario</h2>
+                </div>
+            </div>
+            <nav class="space-y-4">
+                <a href="#" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10m-5 6h.01"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="gastosExportados.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <span>Gastos</span>
+                </a>
+                <a href="presupuesto.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>Presupuestos</span>
+                </a>
+                <a href="perfilConfiguracion.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                    <span>Configuración</span>
+                </a>
+                <a href="#" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 9v6m4-6v6m-9 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <span>Salir</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Contenido -->
+        <div class="flex-1 p-6">
+            <h1 class="text-2xl font-bold mb-4">Mis Gastos</h1>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex justify-between mb-4">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Filtrar</button>
+                    <div class="relative">
+                        <button onclick="toggleExportMenu()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Exportar</button>
+                        <div id="exportMenu" class="hidden absolute bg-white border rounded shadow-md mt-2">
+                            <button onclick="exportToCSV()" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Exportar a CSV</button>
+                            <button onclick="exportToPDF()" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Exportar a PDF</button>
+                        </div>
+                    </div>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Agregar</button>
+                </div>
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-blue-500 text-white">
+                            <th class="p-2">Fecha</th>
+                            <th class="p-2">Categoría</th>
+                            <th class="p-2">Descripción</th>
+                            <th class="p-2">Recurrente</th>
+                            <th class="p-2">Monto</th>
+                            <th class="p-2">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b">
+                            <td class="p-2">12/12/2024</td>
+                            <td class="p-2">Ocio</td>
+                            <td class="p-2">La Niebla, libro de Steven King</td>
+                            <td class="p-2">No</td>
+                            <td class="p-2">S/. 29.99</td>
+                            <td class="p-2 flex space-x-2">
+                                <button class="text-blue-500 hover:underline">✏️</button>
+                                <button class="text-red-500 hover:underline">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-2">02/12/2024</td>
+                            <td class="p-2">Servicios</td>
+                            <td class="p-2">Servicio de Luz</td>
+                            <td class="p-2">Sí</td>
+                            <td class="p-2">S/. 229.99</td>
+                            <td class="p-2 flex space-x-2">
+                                <button class="text-blue-500 hover:underline">✏️</button>
+                                <button class="text-red-500 hover:underline">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-2">02/12/2024</td>
+                            <td class="p-2">Servicios</td>
+                            <td class="p-2">Servicio del agua</td>
+                            <td class="p-2">Sí</td>
+                            <td class="p-2">S/. 129.99</td>
+                            <td class="p-2 flex space-x-2">
+                                <button class="text-blue-500 hover:underline">✏️</button>
+                                <button class="text-red-500 hover:underline">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="p-2">05/12/2024</td>
+                            <td class="p-2">Servicios</td>
+                            <td class="p-2">Movistar</td>
+                            <td class="p-2">Sí</td>
+                            <td class="p-2">S/. 169.99</td>
+                            <td class="p-2 flex space-x-2">
+                                <button class="text-blue-500 hover:underline">✏️</button>
+                                <button class="text-red-500 hover:underline">🗑️</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="p-2">05/12/2024</td>
+                            <td class="p-2">Alimentación</td>
+                            <td class="p-2">Compras del mes</td>
+                            <td class="p-2">Sí</td>
+                            <td class="p-2">S/. 369.99</td>
+                            <td class="p-2 flex space-x-2">
+                                <button class="text-blue-500 hover:underline">✏️</button>
+                                <button class="text-red-500 hover:underline">🗑️</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Script que debe ir en el backend y en typescript -->
+        <script>
+            function toggleExportMenu() {
+                const menu = document.getElementById('exportMenu');
+                menu.classList.toggle('hidden');
+            }
+    
+            function exportToCSV() {
+                const data = [
+                    ['Fecha', 'Categoría', 'Descripción', 'Recurrente', 'Monto'],
+                    ['12/12/2024', 'Ocio', 'La Niebla, libro de Steven King', 'No', 'S/. 29.99'],
+                    ['02/12/2024', 'Servicios', 'Servicio de Luz', 'Sí', 'S/. 229.99'],
+                    ['02/12/2024', 'Servicios', 'Servicio del agua', 'Sí', 'S/. 129.99'],
+                    ['05/12/2024', 'Servicios', 'Movistar', 'Sí', 'S/. 169.99'],
+                    ['05/12/2024', 'Alimentación', 'Compras del mes', 'Sí', 'S/. 369.99']
+                ];
+    
+                let csvContent = "data:text/csv;charset=utf-8,";
+                data.forEach(row => {
+                    csvContent += row.join(',') + "\n";
+                });
+    
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement('a');
+                link.setAttribute('href', encodedUri);
+                link.setAttribute('download', 'mis_gastos.csv');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+    
+            function exportToPDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("Mis Gastos", 10, 10);
+                const data = [
+                    ['Fecha', 'Categoría', 'Descripción', 'Recurrente', 'Monto'],
+                    ['12/12/2024', 'Ocio', 'La Niebla, libro de Steven King', 'No', 'S/. 29.99'],
+                    ['02/12/2024', 'Servicios', 'Servicio de Luz', 'Sí', 'S/. 229.99'],
+                    ['02/12/2024', 'Servicios', 'Servicio del agua', 'Sí', 'S/. 129.99'],
+                    ['05/12/2024', 'Servicios', 'Movistar', 'Sí', 'S/. 169.99'],
+                    ['05/12/2024', 'Alimentación', 'Compras del mes', 'Sí', 'S/. 369.99']
+                ];
+    
+                let y = 20;
+                data.forEach(row => {
+                    doc.text(row.join(' | '), 10, y);
+                    y += 10;
+                });
+    
+                doc.save('mis_gastos.pdf');
+            }
+        </script>
+    </body>
+    </html>

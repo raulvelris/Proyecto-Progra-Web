@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="flex">
+        <!-- Columna de Enlaces -->
+        <div class="w-64 bg-blue-50 p-4 min-h-screen">
+            <div class="flex items-center space-x-4 mb-6">
+                <img src="" alt="Avatar" class="rounded-full w-12 h-12">
+                <div>
+                    <h2 class="text-lg font-semibold">Usuario</h2>
+                </div>
+            </div>
+            <nav class="space-y-4">
+                <a href="#" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a2 2 0 002 2h10a2 2 0 002-2V10m-5 6h.01"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="gastosExportados.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    <span>Gastos</span>
+                </a>
+                <a href="presupuesto.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <span>Presupuestos</span>
+                </a>
+                <a href="perfilConfiguracion.html" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                    <span>Configuración</span>
+                </a>
+                <a href="#" class="flex items-center space-x-2 text-gray-700 hover:text-blue-500">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 9v6m4-6v6m-9 2h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <span>Salir</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Contenido -->
+        <div class="flex-1 p-6">
+            <h1 class="text-2xl font-bold mb-4">Mi perfil</h1>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold mb-4">Información personal</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Nombre</span>
+                        <span id="display-name">Usuario</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Correo electrónico</span>
+                        <span id="display-email">usuario@aloe.ulima.edu.pe</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Contraseña</span>
+                        <span id="display-password">12345</span>
+                    </div>
+                </div>
+                <button id="edit-button" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Editar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cambio de Contraseña -->
+    <div id="edit-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 class="text-xl font-semibold mb-4">Editar información</h2>
+            <form id="edit-form" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-gray-700">Nombre</label>
+                    <input type="text" id="name" class="w-full p-2 border rounded" placeholder="Jessica Straus">
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700">Correo electrónico</label>
+                    <input type="email" id="email" class="w-full p-2 border rounded" placeholder="jess@taxes.com">
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-700">Contraseña</label>
+                    <input type="password" id="password" class="w-full p-2 border rounded" placeholder="12345">
+                </div>
+                <div class="flex justify-end space-x-4">
+                    <button type="button" id="cancel-button" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">Cancelar</button>
+                    <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script que debe ir en el backend y en typescript -->
+    <script>
+        const editButton = document.getElementById('edit-button');
+        const editModal = document.getElementById('edit-modal');
+        const cancelButton = document.getElementById('cancel-button');
+
+        const displayName = document.getElementById('display-name');
+        const displayEmail = document.getElementById('display-email');
+        const displayPassword = document.getElementById('display-password');
+
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        editButton.addEventListener('click', () => {
+            nameInput.value = displayName.textContent;
+            emailInput.value = displayEmail.textContent;
+            passwordInput.value = displayPassword.textContent;
+            editModal.classList.remove('hidden');
+        });
+
+        cancelButton.addEventListener('click', () => {
+            editModal.classList.add('hidden');
+        });
+
+        document.getElementById('edit-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Validar que los campos no estén vacíos
+            if (!nameInput.value.trim() || !emailInput.value.trim() || !passwordInput.value.trim()) {
+                alert('Todos los campos deben estar llenos.');
+                return;
+            }
+
+            // Confirmar cambios
+            const confirmChange = confirm('¿Estás seguro de cambiar tu información? Esto incluye la contraseña.');
+            if (!confirmChange) {
+                return;
+            }
+
+            // Actualizar valores en pantalla
+            displayName.textContent = nameInput.value;
+            displayEmail.textContent = emailInput.value;
+            displayPassword.textContent = passwordInput.value;
+
+            editModal.classList.add('hidden');
+            alert('Información actualizada exitosamente.');
+        });
+    </script>
+</body>
+</html>
+
+
