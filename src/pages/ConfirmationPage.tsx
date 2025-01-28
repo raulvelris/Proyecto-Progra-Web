@@ -11,8 +11,7 @@ const ConfirmationPage = () => {
         <p className="text-gray-500 text-xl pb-5">
             Gracias.
         </p>
-        <button 
-            className="self-center bg-blue-500 text-white px-4 py-2 rounded w-84 mt-2 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
+        <button className="self-center bg-blue-500 text-white px-4 py-2 rounded w-84 mt-2 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
             type="button">
                 Confirmar
         </button>

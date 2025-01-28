@@ -9,7 +9,7 @@ import ConfirmationPage from './pages/ConfirmationPage'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* <LoginPage/> */}
-    {/* <RegisterPage/> */}
-    <ConfirmationPage/>
+    <RegisterPage/>
+    {/* <ConfirmationPage/> */}
   </StrictMode>,
 )
