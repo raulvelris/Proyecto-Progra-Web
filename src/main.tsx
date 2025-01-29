@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import RecuperarContraseña from './pages/RecuperarContraseña';
+import EgresosxFecha from './pages/EgresosxFecha';
+
 //import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
@@ -11,6 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
+        <Route path="/egresosxfecha" element={<EgresosxFecha />} />
       </Routes>
     </Router>
   );
