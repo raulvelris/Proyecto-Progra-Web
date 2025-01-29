@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './LoginPage.css'
+import '../tailwind.css';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
