@@ -1,48 +1,64 @@
-import React from "react"
-import { Link } from "react-router-dom"
-import "./BarraLateral.css"
+import React from "react";
+import { Link } from "react-router-dom";
+import { ListGroup, Image } from "react-bootstrap";
+import { VscGraph } from "react-icons/vsc";
+import { FaCog, FaDollarSign, FaSignOutAlt, FaMoneyBill } from "react-icons/fa";
+//import "./BarraLateral.css"; // Asegúrate de tener este archivo para estilos personalizados
 
-function BarraLateral() {
+const BarraLateral: React.FC = () => {
   return (
-    <div className="bg-light border-end vh-100 d-flex flex-column sidebar-width">
-      <div className="text-center p-4">
-        <img
-          src="../assets/FotoMujer.jpeg"
-          alt="Foto"
-          className="rounded-circle"
-          style={{ width: "80px", height: "80px", objectFit: "cover" }}
+      <div className="sidebar d-flex flex-column p-3">
+        <Image
+        src="https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/45843.png&w=350&h=254"
+        roundedCircle
+        className="mb-3"
         />
-        <h5 className="mt-2">Jessica Straus</h5>
-      </div>
-      <ul className="nav flex-column">
-        <li className="nav-item">
-          <Link to="/app/dashboard" className="nav-link px-4">
-            <i className="bi bi-bar-chart-fill me-2"></i>Dashboard
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/app/gastos" className="nav-link px-4">
-            <i className="bi bi-wallet2 me-2"></i>Gastos
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="#" className="nav-link px-4">
-            <i className="bi bi-cash-stack me-2"></i>Presupuestos
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="#" className="nav-link px-4">
-            <i className="bi bi-gear me-2"></i>Configuración
-          </Link>
-        </li>
-        <li className="nav-item mt-auto">
-          <Link to="/" className="nav-link px-4">
-            <i className="bi bi-box-arrow-left me-2"></i>Salir
-          </Link>
-        </li>
-      </ul>
+
+        <h5 className="text-center">Leo Messi</h5>
+        <ListGroup variant="flush">
+
+        <ListGroup.Item
+          as={Link} to="/app/dashboard"
+          action
+          className="text-secondary active">
+          <VscGraph /> Dashboard
+        </ListGroup.Item>
+
+        <ListGroup.Item
+          as={Link}
+          to="/app/gastos"
+          action
+          className="text-muted">
+          <FaMoneyBill /> Gastos
+        </ListGroup.Item>
+
+        <ListGroup.Item
+          as={Link}
+          to="#"
+          action
+          className="text-secondary">
+          <FaDollarSign /> Presupuestos
+        </ListGroup.Item>
+
+        <ListGroup.Item
+          as={Link}
+          to="#"
+          action
+          className="text-muted">
+          <FaCog /> Configuración
+        </ListGroup.Item>
+
+        <ListGroup.Item
+          as={Link}
+          to="/"
+          action
+          className="text-muted salir-item">
+          <FaSignOutAlt /> Salir
+        </ListGroup.Item>
+
+      </ListGroup>
     </div>
-  )
+  );
 }
 
-export default BarraLateral
+export default BarraLateral;

@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { Link } from "react-router-dom"
 import { obtenerGastos, eliminarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
-import FiltroGastos from "../components/FiltroGastos"
+import FiltroGastos from "./FiltroGastos"
 
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([])

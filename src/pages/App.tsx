@@ -1,16 +1,15 @@
-import React from "react"
 import { Routes, Route } from "react-router-dom"
-import BarraLateral from "./components/BarraLateral"
-import Gastos from "./pages/Gastos"
-import EditarGasto from "./pages/EditarGasto"
-import Dashboard from "./pages/Tablas"
+import BarraLateral from "../components/BarraLateral"
+import Gastos from "../components/Gastos"
+import EditarGasto from "../components/EditarGasto"
+import Dashboard from "./Tablas"
 import "bootstrap/dist/css/bootstrap.min.css"
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="d-flex">
       <BarraLateral />
-      <div className="flex-grow-1">
+      <div className="w-100 p-3">
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="gastos" element={<Gastos />} />
