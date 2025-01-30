@@ -1,17 +1,18 @@
 import React, {useState, useMemo, useEffect } from "react"
-import { FaEdit, FaTrash, FaFilter } from "react-icons/fa"
+import { FaEdit, FaTrash, FaFilter, FaPlus } from "react-icons/fa"
 import { getUsers, deleteUser } from "../services/userService"
 import { User } from "../types/User"
 import EditUserModal from "./EditUserModal"
 import DeleteUserModal from "./DeleteUserModal"
 import FilterUserModal from "./FilterUserModal"
+import AddUserModal from "./AddUserModal"
 
 const Users: React.FC = () => {
     const [allUsers, setAllUsers] = useState<User[]>([])
     const [filterRole, setFilterRole] = useState("")
     const [selectedUser, setSelectedUser] = useState<User | null>(null)
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [modalType, setModalType] = useState<'edit' | 'delete' | 'filter'>('edit')
+    const [modalType, setModalType] = useState<'edit' | 'delete' | 'filter' | 'add'>('edit')
 
     useEffect(() => {
         setAllUsers(getUsers())
@@ -31,7 +32,13 @@ const Users: React.FC = () => {
         closeModal()
     }
 
-    const openModal = (user: User | null, type: 'edit' | 'delete' | 'filter') => {
+    function handleAddUser() {
+        const currentUsers = [...getUsers()]
+        setAllUsers(currentUsers)
+        closeModal()
+    }
+    
+    const openModal = (user: User | null, type: 'edit' | 'delete' | 'filter' | 'add') => {
         setSelectedUser(user)
         setModalType(type)
         setIsModalOpen(true)
@@ -50,7 +57,10 @@ const Users: React.FC = () => {
                     <FaFilter className="me-2" />
                     Filtrar
                 </button>
-                <button className="btn btn-primary me-2">+ Agregar</button>
+                <button onClick={() => openModal(null, 'add')} className="btn btn-primary me-4">
+                    <FaPlus className="me-2" />
+                    Agregar
+                </button>
             </div>
             <table className="table table-bordered">
                 <thead className="table-light">
@@ -72,10 +82,10 @@ const Users: React.FC = () => {
                             <td>{user.password}</td>
                             <td>{user.role}</td>
                             <td>
-                                <button onClick={() => openModal(user, 'edit')} className="btn btn-sm btn-warning me-2">
+                                <button onClick={() => openModal(user, 'edit')} className="btn btn-sm">
                                     <FaEdit />
                                 </button>
-                                <button onClick={() => openModal(user, 'delete')} className="btn btn-sm btn-danger">
+                                <button onClick={() => openModal(user, 'delete')} className="btn btn-sm">
                                     <FaTrash />
                                 </button>
                             </td>
@@ -112,6 +122,12 @@ const Users: React.FC = () => {
                     closeModal={closeModal}
                     filterRole={filterRole}
                     setFilterRole={setFilterRole}
+                />
+            )}
+            {isModalOpen && modalType === 'add' && (
+                <AddUserModal
+                    closeModal={closeModal}
+                    onSave={handleAddUser}
                 />
             )}
         </div>

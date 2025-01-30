@@ -12,10 +12,6 @@ export function getUsers(): User[] {
     return usersData
 }
 
-export function getUserById(id: number): User | undefined {
-    return usersData.find(user => user.id === id)
-}
-
 export function updateUser(updated: User): void {
     usersData = usersData.map(u => u.id === updated.id ? updated : u)
 }

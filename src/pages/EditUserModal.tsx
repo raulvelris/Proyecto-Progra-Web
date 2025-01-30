@@ -26,7 +26,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
 
   return (
     <div className="modal fade show d-flex align-items-center justify-content-center"
-    style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }} aria-modal="true" role="dialog">
+        style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }} aria-modal="true" role="dialog">
         <div className="modal-dialog" style={{ maxWidth: "450px", width: "100%" }}>
             <div className="modal-content">
                 <div className="modal-header d-flex justify-content-center w-100">
