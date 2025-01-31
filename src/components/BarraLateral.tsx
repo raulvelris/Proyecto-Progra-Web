@@ -14,7 +14,7 @@ const BarraLateral: React.FC = () => {
         className="mb-3"
         />
 
-        <h5 className="text-center">Leo Messi</h5>
+        <h5 className="text-center">Lionel Messi</h5>
         <ListGroup variant="flush">
 
         <ListGroup.Item
