@@ -1,24 +1,22 @@
-import React from "react"
-import { Routes, Route } from "react-router-dom"
-import BarraLateral from "./components/BarraLateral"
-import Gastos from "./pages/Gastos"
-import EditarGasto from "./pages/EditarGasto"
-import Dashboard from "./pages/Tablas"
-import "bootstrap/dist/css/bootstrap.min.css"
+import { Routes, Route, Navigate } from "react-router-dom";
+import SidebarUsuario from "./components/SidebarUsuario";
+import Presupuestos from "./pages/Presupuesto";
+import EditarConfiguracion from "./pages/EditarConfiguracion";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
     <div className="d-flex">
-      <BarraLateral />
+      <SidebarUsuario />
       <div className="flex-grow-1">
         <Routes>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="gastos" element={<Gastos />} />
-          <Route path="gastos/editar/:id" element={<EditarGasto />} />
+          <Route path="/" element={<Navigate to="/app/presupuestos" />} />
+          <Route path="presupuestos" element={<Presupuestos />} />
+          <Route path="configuracion" element={<EditarConfiguracion />} />
         </Routes>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
