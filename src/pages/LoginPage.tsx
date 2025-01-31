@@ -29,7 +29,7 @@ const Login = () => {
                 placeholder="Ingresar correo" value={email} onChange={emailChange}/>
             <input className="border border-gray-400 rounded px-4 py-2 w-84 my-2" type="password" 
                 placeholder="Ingresar contraseña" value={password} onChange={passwordChange}/>
-            <a className="text-blue-400 underline mb-4" href="#">¿Olvidaste tu contraseña?</a>
+            <a className="text-blue-400 underline mb-4" href="/olvidastecontra">¿Olvidaste tu contraseña?</a>
             <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-2 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
                 type="button">Ingresar</button>
             <p className="text-gray-500 p-1">O</p>
