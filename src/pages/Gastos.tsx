@@ -3,7 +3,8 @@ import { obtenerGastos, eliminarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
 import FiltroGastos from "../components/FiltroGastos"
 import EditarGastoModal from "./EditarGasto"
-import ExportarGastoModal from "./ExportarGastoModal";
+import ExportarGastoModal from "./ExportarGastoModal"
+import ModalAddGasto from "../components/ModalAddGasto"
 import EliminarGasto from "./EliminarGasto"
 
 function Gastos() {
@@ -19,6 +20,7 @@ function Gastos() {
   //
   const [editingGastoId, setEditingGastoId] = useState<number | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
 //-------------------------Alerta de agastos--------------------------------------------
 
@@ -127,12 +129,21 @@ const BudgetAlertModal = () => {
 
   //
   const handleDeleteClick = (id: number) => {
+    setEditingGastoId(null); // Close edit modal
     setSelectedGastoId(id);
     setIsDeleteModalOpen(true);
   };
+  
   const handleEditClick = (id: number) => {
+    setIsDeleteModalOpen(false); // Close delete modal
+    setSelectedGastoId(null);
     setEditingGastoId(id);
   };
+  
+  const handleAddClick = () => {
+    setIsAddModalOpen(true);
+  };
+
 
   return (
     <div className="container mt-4">
@@ -150,7 +161,7 @@ const BudgetAlertModal = () => {
           setFiltroRec={setFiltroRec}
         />
         <div>
-          <button className="btn btn-primary me-2">+ Agregar</button>
+          <button className="btn btn-primary me-2" onClick={handleAddClick}>+ Agregar</button>
           <button className="btn btn-secondary" onClick={openExportModal}>Exportar Gastos</button>
         </div>
       </div>
@@ -194,11 +205,6 @@ const BudgetAlertModal = () => {
           )}
         </tbody>
       </table>
-      {selectedGastoId && (
-        <EditarGastoModal
-          id={selectedGastoId}
-          onClose={() => setSelectedGastoId(null)}
-          onUpdate={actualizarLista}/>)}
       {isExportModalOpen && (
         <ExportarGastoModal
           closeModal={closeExportModal}
@@ -218,7 +224,14 @@ const BudgetAlertModal = () => {
             eliminarGasto(selectedGastoId!);
             setLista(obtenerGastos());
             setIsDeleteModalOpen(false);
-          }}/>)}
+          }}/>
+      )}
+        {isAddModalOpen && (
+        <ModalAddGasto
+          showModal={isAddModalOpen}
+          closeModal={() => setIsAddModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -43,7 +43,7 @@ const Presupuestos: React.FC = () => {
         <div className="container mt-4">
         <h2>Mis Presupuestos</h2>
         <div className="d-flex justify-content-end my-3">
-            <button onClick={() => openModal(null, 'add')} className="btn btn-primary me-4">
+            <button onClick={() => openModal(null, 'add')} className="btn btn-primary me-4 d-flex align-items-center">
                 <FaPlus className="me-2" />
                 Agregar
             </button>
