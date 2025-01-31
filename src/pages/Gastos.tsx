@@ -2,7 +2,8 @@ import { useEffect, useState, useMemo } from "react"
 import { obtenerGastos, eliminarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
 import FiltroGastos from "../components/FiltroGastos"
-import EditarGastoModal from "../components/EditarGasto"
+import EditarGastoModal from "./EditarGasto"
+import ExportarGastoModal from "./ExportarGastoModal";
 
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([])
@@ -13,6 +14,7 @@ function Gastos() {
   const [selectedGastoId, setSelectedGastoId] = useState<number | null>(null)
   const [showBudgetAlert, setShowBudgetAlert] = useState(false)
   const [exceededCategories, setExceededCategories] = useState<string[]>([])
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
 //-------------------------Alerta de agastos--------------------------------------------
 
@@ -88,31 +90,43 @@ const BudgetAlertModal = () => {
 
 //-------------------------Alerta de agastos--------------------------------------------
   useEffect(() => {
-    setLista(obtenerGastos())
-  }, [])
+    setLista(obtenerGastos());
+  }, []);
 
   const datosFiltrados = useMemo(() => {
     return lista.filter(g => {
-      const catOk = !filtroCategoria || g.categoria === filtroCategoria
-      const fechaOk = !filtroFecha || g.fecha === filtroFecha
-      const montoOk = filtroMonto === null || g.monto === filtroMonto
-      let recOk = true
-      if (filtroRec === "si") recOk = g.recurrente === true
-      if (filtroRec === "no") recOk = g.recurrente === false
-      return catOk && fechaOk && montoOk && recOk
-    })
-  }, [lista, filtroCategoria, filtroFecha, filtroMonto, filtroRec])
+      const catOk = !filtroCategoria || g.categoria === filtroCategoria;
+      const fechaOk = !filtroFecha || g.fecha === filtroFecha;
+      const montoOk = filtroMonto === null || g.monto === filtroMonto;
+      let recOk = true;
+      if (filtroRec === "si") recOk = g.recurrente === true;
+      if (filtroRec === "no") recOk = g.recurrente === false;
+      return catOk && fechaOk && montoOk && recOk;
+    });
+  }, [lista, filtroCategoria, filtroFecha, filtroMonto, filtroRec]);
 
   function borrar(id: number) {
     if (window.confirm("¿Eliminar este gasto?")) {
-      eliminarGasto(id)
-      setLista(obtenerGastos())
+      eliminarGasto(id);
+      setLista(obtenerGastos());
     }
   }
 
   const actualizarLista = () => {
     setLista(obtenerGastos())
   }
+  const openExportModal = () => {
+    setIsExportModalOpen(true);
+  };
+
+  const closeExportModal = () => {
+    setIsExportModalOpen(false);
+  };
+
+  const handleExport = (format: 'csv' | 'pdf') => {
+    console.log(`Exportando en formato ${format}`);
+    closeExportModal();
+  };
 
   return (
     <div className="container mt-4">
@@ -129,7 +143,10 @@ const BudgetAlertModal = () => {
           filtroRec={filtroRec}
           setFiltroRec={setFiltroRec}
         />
-        <button className="btn btn-primary">+ Agregar</button>
+        <div>
+          <button className="btn btn-primary me-2">+ Agregar</button>
+          <button className="btn btn-secondary" onClick={openExportModal}>Exportar Gastos</button>
+        </div>
       </div>
       
       <table className="table table-bordered">
@@ -171,16 +188,18 @@ const BudgetAlertModal = () => {
           )}
         </tbody>
       </table>
-
       {selectedGastoId && (
         <EditarGastoModal
           id={selectedGastoId}
           onClose={() => setSelectedGastoId(null)}
-          onUpdate={actualizarLista}
-        />
-      )}
+          onUpdate={actualizarLista}/>)}
+      {isExportModalOpen && (
+        <ExportarGastoModal
+          closeModal={closeExportModal}
+          onExport={handleExport}
+          data={lista}/>)}
     </div>
-  )
+  );
 }
 
-export default Gastos
+export default Gastos;
