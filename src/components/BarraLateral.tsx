@@ -20,7 +20,7 @@ const BarraLateral: React.FC = () => {
         <ListGroup.Item
           as={Link} to="/app/dashboard"
           action
-          className="text-secondary">
+          className="text-secondary d-flex align-items-center">
           <VscGraph /> Dashboard
         </ListGroup.Item>
 
@@ -28,7 +28,7 @@ const BarraLateral: React.FC = () => {
           as={Link}
           to="/app/gastos"
           action
-          className="text-muted">
+          className="text-muted d-flex align-items-center">
           <FaMoneyBill /> Gastos
         </ListGroup.Item>
 
@@ -36,7 +36,7 @@ const BarraLateral: React.FC = () => {
           as={Link}
           to="/app/presupuestos"
           action
-          className="text-secondary">
+          className="text-secondary d-flex align-items-center">
           <FaDollarSign /> Presupuestos
         </ListGroup.Item>
 
@@ -44,7 +44,7 @@ const BarraLateral: React.FC = () => {
           as={Link}
           to="/app/configuracion"
           action
-          className="text-muted">
+          className="text-muted d-flex align-items-center">
           <FaCog /> Configuración
         </ListGroup.Item>
 
@@ -52,7 +52,7 @@ const BarraLateral: React.FC = () => {
           as={Link}
           to="/"
           action
-          className="text-muted salir-item">
+          className="text-muted salir-item d-flex align-items-center">
           <FaSignOutAlt /> Salir
         </ListGroup.Item>
 

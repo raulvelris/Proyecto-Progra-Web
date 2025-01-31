@@ -18,7 +18,7 @@ const Barra: React.FC = () => {
       <ListGroup.Item
           as={Link} to="/appadmin/dashboard"
           action
-          className="text-secondary">
+          className="text-secondary d-flex align-items-center">
           <VscGraph /> Dashboard
       </ListGroup.Item>
 
@@ -26,7 +26,7 @@ const Barra: React.FC = () => {
       <ListGroup.Item
         as={Link} to="/appadmin/usuarios"
         action
-        className="text-muted">
+        className="text-muted d-flex align-items-center">
         <FaUsers /> Usuarios
       </ListGroup.Item>
 
@@ -34,14 +34,14 @@ const Barra: React.FC = () => {
       <ListGroup.Item
         as={Link} to="/appadmin/historial"
         action
-        className="text-secondary">
+        className="text-secondary d-flex align-items-center">
         <FaHistory /> Historial
       </ListGroup.Item>
 
       <ListGroup.Item
         as={Link} to="/appadmin/configuracion"
         action
-        className="text-muted">
+        className="text-muted d-flex align-items-center">
         <FaCog /> Configuracion
       </ListGroup.Item>
         
@@ -49,7 +49,7 @@ const Barra: React.FC = () => {
         as={Link}
         to="/"
         action
-        className="text-muted salir-item">
+        className="text-muted salir-item d-flex align-items-center">
         <FaSignOutAlt /> Salir
       </ListGroup.Item>
       </ListGroup>
