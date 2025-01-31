@@ -19,6 +19,14 @@ const AgregarPresupuestoModal: React.FC<AgregarPresupuestoModalProps> = ({ close
         setPresupuesto(prev => ({ ...prev, [name]: value }))
     }
 
+    function handleCheckboxChange(p: React.ChangeEvent<HTMLInputElement>) {
+        const { name, checked } = p.target
+        setPresupuesto(prev => ({
+            ...prev,
+            categoria: checked ? name : ""
+        }))
+    }
+
     function handleSubmit(p: React.FormEvent) {
         p.preventDefault()
         agregarPresupuesto(presupuesto)
@@ -41,15 +49,36 @@ const AgregarPresupuestoModal: React.FC<AgregarPresupuestoModalProps> = ({ close
                     <div className="modal-body">
                         <form onSubmit={handleSubmit}>
                             <div className="form-group">
-                                <label htmlFor="categoria">Categoría</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="categoria"
-                                    name="categoria"
-                                    value={presupuesto.categoria}
-                                    onChange={handleChange}
-                                />
+                                <label>Categoría</label>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="Ocio"
+                                            checked={presupuesto.categoria === "Ocio"}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        Ocio
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="Servicios"
+                                            checked={presupuesto.categoria === "Servicios"}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        Servicios
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="Alimentación"
+                                            checked={presupuesto.categoria === "Alimentación"}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        Alimentación
+                                    </label>
+                                </div>
                             </div>
                             <div className="form-group">
                                 <label htmlFor="monto">Monto</label>
@@ -72,4 +101,3 @@ const AgregarPresupuestoModal: React.FC<AgregarPresupuestoModalProps> = ({ close
 }
 
 export default AgregarPresupuestoModal
-

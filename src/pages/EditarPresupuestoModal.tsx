@@ -16,6 +16,14 @@ const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupu
         setPresupuestoData(prev => ({ ...prev, [name]: value }))
     }
 
+    function handleCheckboxChange(p: React.ChangeEvent<HTMLInputElement>) {
+        const { name, checked } = p.target
+        setPresupuestoData(prev => ({
+            ...prev,
+            categoria: checked ? name : ""
+        }))
+    }
+
     function handleSubmit(p: React.FormEvent) {
         p.preventDefault()
         actualizarPresupuesto(presupuestoData)
@@ -34,7 +42,38 @@ const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupu
                     </div>
                     <form onSubmit={handleSubmit}>
                         <div className="modal-body">
-                            
+                            <div className="form-group">
+                                <label>Categoría</label>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="Ocio"
+                                            checked={presupuestoData.categoria === "Ocio"}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        Ocio
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="Servicios"
+                                            checked={presupuestoData.categoria === "Servicios"}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        Servicios
+                                    </label>
+                                    <label>
+                                        <input
+                                            type="checkbox"
+                                            name="Alimentación"
+                                            checked={presupuestoData.categoria === "Alimentación"}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                        Alimentación
+                                    </label>
+                                </div>
+                            </div>
                             <div className="mb-3 d-flex align-items-center">
                                 <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>Monto</label>
                                 <input
