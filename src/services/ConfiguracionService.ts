@@ -1,15 +1,16 @@
-import { UsuarioAutenticado } from '../types/Configuracion';
+import { ConfiguracionTipo } from "../types/ConfiguracionTipo";
 
-export const actualizarUsuario = async (usuario: UsuarioAutenticado): Promise<void> => {
-    const response = await fetch(`/api/usuarios/${usuario.id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(usuario)
-    });
-
-    if (!response.ok) {
-        throw new Error('Error al actualizar el usuario');
-    }
+let configuracion: ConfiguracionTipo = {
+    id: 1,
+    nombre: "Lionel Messi",
+    email: "lionel.messi@example.com",
+    password: "password123"
 };
+
+export function getConfiguracion(): ConfiguracionTipo {
+    return configuracion;
+}
+
+export function actualizarConfiguracion(configuracionActualizada: ConfiguracionTipo): void {
+    configuracion = configuracionActualizada;
+}

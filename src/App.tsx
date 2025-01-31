@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import SidebarUsuario from "./components/SidebarUsuario";
 import Presupuestos from "./pages/Presupuesto";
-import EditarConfiguracion from "./pages/EditarConfiguracion";
+import Configuracion from "./pages/Configuracion";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/app/presupuestos" />} />
           <Route path="presupuestos" element={<Presupuestos />} />
-          <Route path="configuracion" element={<EditarConfiguracion />} />
+          <Route path="configuracion" element={<Configuracion />} />
         </Routes>
       </div>
     </div>
