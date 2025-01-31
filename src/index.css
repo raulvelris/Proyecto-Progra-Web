@@ -204,3 +204,34 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+
+
+
+
+
+
+.alert-modal {
+  max-width: 500px;
+  padding: 2rem;
+}
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #dc3545;
+  padding-bottom: 1rem;
+}
+
+.alert-header i {
+  font-size: 2rem;
+}
+
+.alert-body {
+  padding: 1.5rem 0;
+  font-size: 1.1rem;
+}
+
+.alert-footer {
+  text-align: right;
+}
