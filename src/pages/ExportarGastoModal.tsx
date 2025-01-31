@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { exportarCSV, exportarPDF } from '../services/ExportarService';
+import { GastoTipo } from '../types/GastoTipo';
 
 interface ExportarGastoModalProps {
     closeModal: () => void;
     onExport: (format: 'csv' | 'pdf') => void;
+    data: GastoTipo[];
 }
 
-const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onExport }) => {
+const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onExport, data }) => {
     const [selectedFormat, setSelectedFormat] = useState<'csv' | 'pdf'>('csv');
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -13,6 +16,11 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onE
     };
 
     const handleExport = () => {
+        if (selectedFormat === 'csv') {
+            exportarCSV(data);
+        } else {
+            exportarPDF(data);
+        }
         onExport(selectedFormat);
     };
 
