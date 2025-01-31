@@ -1,8 +1,8 @@
 import { useEffect, useState, useMemo } from "react"
-import { Link } from "react-router-dom"
 import { obtenerGastos, eliminarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
 import FiltroGastos from "./FiltroGastos"
+import EditarGastoModal from "../components/EditarGasto"
 
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([])
@@ -10,6 +10,7 @@ function Gastos() {
   const [filtroFecha, setFiltroFecha] = useState("")
   const [filtroMonto, setFiltroMonto] = useState<number | null>(null)
   const [filtroRec, setFiltroRec] = useState("")
+  const [selectedGastoId, setSelectedGastoId] = useState<number | null>(null)
 
   useEffect(() => {
     setLista(obtenerGastos())
@@ -34,6 +35,10 @@ function Gastos() {
     }
   }
 
+  const actualizarLista = () => {
+    setLista(obtenerGastos())
+  }
+
   return (
     <div className="container mt-4">
       <h2>Mis Gastos</h2>
@@ -50,6 +55,7 @@ function Gastos() {
         />
         <button className="btn btn-primary">+ Agregar</button>
       </div>
+      
       <table className="table table-bordered">
         <thead className="table-light">
           <tr>
@@ -70,9 +76,12 @@ function Gastos() {
               <td>{g.descripcion}</td>
               <td>{g.recurrente ? "Sí" : "No"}</td>
               <td>
-                <Link to={`/app/gastos/editar/${g.id}`} className="btn btn-warning btn-sm me-2">
+                <button 
+                  onClick={() => setSelectedGastoId(g.id)} 
+                  className="btn btn-warning btn-sm me-2"
+                >
                   <i className="bi bi-pencil-square"></i>
-                </Link>
+                </button>
                 <button onClick={() => borrar(g.id)} className="btn btn-danger btn-sm">
                   <i className="bi bi-trash"></i>
                 </button>
@@ -86,6 +95,14 @@ function Gastos() {
           )}
         </tbody>
       </table>
+
+      {selectedGastoId && (
+        <EditarGastoModal
+          id={selectedGastoId}
+          onClose={() => setSelectedGastoId(null)}
+          onUpdate={actualizarLista}
+        />
+      )}
     </div>
   )
 }

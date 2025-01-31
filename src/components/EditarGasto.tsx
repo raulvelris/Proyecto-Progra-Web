@@ -1,26 +1,31 @@
+// EditarGastoModal.tsx (nuevo componente modal)
 import React, { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom"
-import { obtenerGastoPorId, actualizarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
+import { obtenerGastoPorId, actualizarGasto } from "../services/GastoService"
 
-function EditarGasto() {
-  const { id } = useParams()
-  const nav = useNavigate()
+interface Props {
+  id: number | null
+  onClose: () => void
+  onUpdate: () => void
+}
+
+function EditarGasto({ id, onClose, onUpdate }: Props) {
   const [dato, setDato] = useState<GastoTipo | null>(null)
-
+  
   useEffect(() => {
-    const numId = Number(id)
-    if (!numId) {
-      nav("/app/gastos")
-      return
+    if (!id) return
+    
+    const cargarDatos = () => {
+      const enc = obtenerGastoPorId(id)
+      if (!enc) {
+        onClose()
+        return
+      }
+      setDato(enc)
     }
-    const enc = obtenerGastoPorId(numId)
-    if (!enc) {
-      nav("/app/gastos")
-      return
-    }
-    setDato(enc)
-  }, [id, nav])
+    
+    cargarDatos()
+  }, [id, onClose])
 
   function cambio(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     if (!dato) return
@@ -34,28 +39,32 @@ function EditarGasto() {
     e.preventDefault()
     if (!dato) return
     actualizarGasto(dato)
-    alert("Gasto actualizado")
-    nav("/app/gastos")
+    onUpdate()
+    onClose()
   }
 
-  if (!dato) {
-    return <div className="container mt-4">Cargando...</div>
-  }
+  if (!id || !dato) return null
 
   return (
-    <div className="container mt-4">
-      <h2>Editar Gasto</h2>
-      <form className="row g-3" onSubmit={enviar}>
-        <div className="col-md-6">
-          <label className="form-label">Fecha</label>
-          <input
-            type="date"
-            name="fecha"
-            className="form-control"
-            value={dato.fecha}
-            onChange={cambio}
-          />
-        </div>
+    <div className="modal-overlay">
+      <div className="modal-contenido">
+        <button className="cerrar-modal" onClick={onClose}>&times;</button>
+        
+        <h2>Editar Gasto</h2>
+        <form className="row g-3" onSubmit={enviar}>
+          {/* Mantenemos todo el formulario original */}
+          <div className="col-md-6">
+            <label className="form-label">Fecha</label>
+            <input
+              type="date"
+              name="fecha"
+              className="form-control"
+              value={dato.fecha}
+              onChange={cambio}
+            />
+          </div>
+          
+          {/* Campo de Monto */}
         <div className="col-md-6">
           <label className="form-label">Monto</label>
           <input
@@ -66,6 +75,8 @@ function EditarGasto() {
             onChange={cambio}
           />
         </div>
+
+        {/* Selector de Categoría */}
         <div className="col-md-6">
           <label className="form-label">Categoría</label>
           <select
@@ -79,6 +90,8 @@ function EditarGasto() {
             <option value="Ocio">Ocio</option>
           </select>
         </div>
+
+        {/* Checkbox Recurrente */}
         <div className="col-md-6 d-flex align-items-center">
           <label className="form-label me-2 mb-0">Recurrente</label>
           <div className="form-check form-switch">
@@ -91,6 +104,8 @@ function EditarGasto() {
             />
           </div>
         </div>
+
+        {/* Campo de Descripción */}
         <div className="col-12">
           <label className="form-label">Descripción</label>
           <input
@@ -101,12 +116,14 @@ function EditarGasto() {
             onChange={cambio}
           />
         </div>
-        <div className="col-12">
-          <button type="submit" className="btn btn-primary">
-            Guardar
-          </button>
-        </div>
-      </form>
+          
+          <div className="col-12">
+            <button type="submit" className="btn btn-primary">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
