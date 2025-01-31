@@ -55,12 +55,12 @@ const ListUsers: React.FC = () => {
         <div className="table-section" style={{ minHeight: "80vh" }}>
             <div className="d-flex justify-content-between align-items-center mb-4 mt-4">
                 <h2 className="table-title m-0">Mis usuarios</h2>
-                <div>
-                    <button onClick={() => openModal(null, 'filter')} className="btn btn-primary btn-lg me-4">
+                <div className="d-flex flex-row">
+                    <button onClick={() => openModal(null, 'filter')} className="btn btn-primary btn-lg me-4 d-flex align-items-center">
                         <FaFilter className="me-2" />
                         Filtrar
                     </button>
-                    <button onClick={() => openModal(null, 'add')} className="btn btn-primary btn-lg me-4">
+                    <button onClick={() => openModal(null, 'add')} className="btn btn-primary btn-lg me-4 d-flex align-items-center">
                         <FaPlus className="me-2" />
                         Agregar
                     </button>
