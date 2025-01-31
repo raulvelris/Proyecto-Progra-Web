@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route} from "react-router-dom";
 import SidebarUsuario from "./components/SidebarUsuario";
 import Presupuestos from "./pages/Presupuesto";
 import Configuracion from "./pages/Configuracion";
