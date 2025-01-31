@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react"
 import { obtenerGastos, eliminarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
-import FiltroGastos from "./FiltroGastos"
+import FiltroGastos from "../components/FiltroGastos"
 import EditarGastoModal from "../components/EditarGasto"
 
 function Gastos() {
