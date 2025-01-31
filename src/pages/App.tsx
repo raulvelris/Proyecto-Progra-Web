@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 import BarraLateral from "../components/BarraLateral"
 import Gastos from "./Gastos"
+//import EditarGasto from "../components/EditarGasto"
 import Dashboard from "./Tablas"
 import "bootstrap/dist/css/bootstrap.min.css"
 import Presupuestos from "./Presupuestos"

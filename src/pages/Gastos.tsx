@@ -3,7 +3,7 @@ import { obtenerGastos, eliminarGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
 import FiltroGastos from "../components/FiltroGastos"
 import EditarGastoModal from "./EditarGasto"
-import ExportarGastoModal from "./ExportarGastoModal"
+import ExportarGastoModal from "./ExportarGastoModal";
 import EliminarGasto from "./EliminarGasto"
 
 function Gastos() {
@@ -12,74 +12,87 @@ function Gastos() {
   const [filtroFecha, setFiltroFecha] = useState("")
   const [filtroMonto, setFiltroMonto] = useState<number | null>(null)
   const [filtroRec, setFiltroRec] = useState("")
-  const [editingGastoId, setEditingGastoId] = useState<number | null>(null)
   const [selectedGastoId, setSelectedGastoId] = useState<number | null>(null)
   const [showBudgetAlert, setShowBudgetAlert] = useState(false)
   const [exceededCategories, setExceededCategories] = useState<string[]>([])
-  const [isExportModalOpen, setIsExportModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  //
+  const [editingGastoId, setEditingGastoId] = useState<number | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const categoryLimits: {[key: string]: number} = {
-    'Alimentación': 5000,
-    'Servicios': 3000,
-    'Ocio': 2000
-  }
+//-------------------------Alerta de agastos--------------------------------------------
 
-  useEffect(() => {
-    const totals = lista.reduce((acc: {[key: string]: number}, gasto) => {
-      acc[gasto.categoria] = (acc[gasto.categoria] || 0) + gasto.monto
-      return acc
-    }, {})
+// 2. Límites hardcodeados (puedes modificarlos)
+const categoryLimits: {[key: string]: number} = {
+  'Alimentación': 5000,
+  'Servicios': 3000,
+  'Ocio': 2000
+}
 
-    const exceeded = Object.keys(totals)
-      .filter(categoria => totals[categoria] > (categoryLimits[categoria] || Infinity))
+// 3. Calcular totales y detectar excesos
+useEffect(() => {
+  const totals = lista.reduce((acc: {[key: string]: number}, gasto) => {
+    acc[gasto.categoria] = (acc[gasto.categoria] || 0) + gasto.monto
+    return acc
+  }, {})
 
-    setExceededCategories(exceeded)
-    if (exceeded.length > 0) setShowBudgetAlert(true)
-  }, [lista])
+  const exceeded = Object.keys(totals)
+    .filter(categoria => totals[categoria] > (categoryLimits[categoria] || Infinity))
 
-  const BudgetAlertModal = () => {
-    if (!showBudgetAlert) return null
+  setExceededCategories(exceeded)
+  if (exceeded.length > 0) setShowBudgetAlert(true)
+}, [lista])
 
-    return (
-      <div className="modal-overlay" style={{ zIndex: 1050 }}>
-        <div className="modal-contenido alert-modal">
-          <button className="cerrar-modal" onClick={() => setShowBudgetAlert(false)}>
-            &times;
-          </button>
-          
-          <div className="alert-header mb-3">
-            <i className="bi bi-exclamation-triangle-fill text-danger me-2"></i>
-            <h3 className="text-danger">¡Alerta de Presupuesto!</h3>
-          </div>
-          
-          <div className="alert-body">
-            {exceededCategories.map(categoria => (
-              <div key={categoria} className="mb-2">
-                <strong>{categoria}:</strong>
-                <div>
-                  Límite: ${categoryLimits[categoria].toLocaleString()}
-                </div>
-                <div>
-                  Gastado: ${lista
-                    .filter(g => g.categoria === categoria)
-                    .reduce((sum, g) => sum + g.monto, 0)
-                    .toLocaleString()}
-                </div>
+// 4. Modal de Alerta
+const BudgetAlertModal = () => {
+  if (!showBudgetAlert) return null
+
+  return (
+    <div className="modal-overlay" style={{ zIndex: 1050 }}>
+      <div className="modal-contenido alert-modal">
+        <button 
+          className="cerrar-modal" 
+          onClick={() => setShowBudgetAlert(false)}
+        >
+          &times;
+        </button>
+        
+        <div className="alert-header mb-3">
+          <i className="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+          <h3 className="text-danger">¡Alerta de Presupuesto!</h3>
+        </div>
+        
+        <div className="alert-body">
+          {exceededCategories.map(categoria => (
+            <div key={categoria} className="mb-2">
+              <strong>{categoria}:</strong>
+              <div>
+                Límite: ${categoryLimits[categoria].toLocaleString()}
               </div>
-            ))}
-          </div>
-          
-          <div className="alert-footer mt-4">
-            <button className="btn btn-primary" onClick={() => setShowBudgetAlert(false)}>
-              Cerrar
-            </button>
-          </div>
+              <div>
+                Gastado: ${lista
+                  .filter(g => g.categoria === categoria)
+                  .reduce((sum, g) => sum + g.monto, 0)
+                  .toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="alert-footer mt-4">
+          <button 
+            className="btn btn-primary"
+            onClick={() => setShowBudgetAlert(false)}
+          >
+            Cerrar
+          </button>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
 
+//-------------------------Alerta de agastos--------------------------------------------
   useEffect(() => {
     setLista(obtenerGastos());
   }, []);
@@ -99,16 +112,6 @@ function Gastos() {
   const actualizarLista = () => {
     setLista(obtenerGastos())
   }
-
-  const handleEditClick = (id: number) => {
-    setEditingGastoId(id);
-  };
-
-  const handleDeleteClick = (id: number) => {
-    setSelectedGastoId(id);
-    setIsDeleteModalOpen(true);
-  };
-
   const openExportModal = () => {
     setIsExportModalOpen(true);
   };
@@ -120,6 +123,15 @@ function Gastos() {
   const handleExport = (format: 'csv' | 'pdf') => {
     console.log(`Exportando en formato ${format}`);
     closeExportModal();
+  };
+
+  //
+  const handleDeleteClick = (id: number) => {
+    setSelectedGastoId(id);
+    setIsDeleteModalOpen(true);
+  };
+  const handleEditClick = (id: number) => {
+    setEditingGastoId(id);
   };
 
   return (
@@ -163,16 +175,13 @@ function Gastos() {
               <td>{g.descripcion}</td>
               <td>{g.recurrente ? "Sí" : "No"}</td>
               <td>
-                <button
-                  onClick={() => handleEditClick(g.id)}
+                <button 
+                  onClick={() => handleEditClick(g.id)} 
                   className="btn btn-warning btn-sm me-2"
                 >
                   <i className="bi bi-pencil-square"></i>
                 </button>
-                <button 
-                  onClick={() => handleDeleteClick(g.id)} 
-                  className="btn btn-danger btn-sm"
-                >
+                <button onClick={() => handleDeleteClick(g.id)} className="btn btn-danger btn-sm">
                   <i className="bi bi-trash"></i>
                 </button>
               </td>
@@ -185,23 +194,23 @@ function Gastos() {
           )}
         </tbody>
       </table>
-
-      {editingGastoId && (
+      {selectedGastoId && (
         <EditarGastoModal
-          id={editingGastoId}
-          onClose={() => setEditingGastoId(null)}
-          onUpdate={actualizarLista}
-        />
-      )}
-
+          id={selectedGastoId}
+          onClose={() => setSelectedGastoId(null)}
+          onUpdate={actualizarLista}/>)}
       {isExportModalOpen && (
         <ExportarGastoModal
           closeModal={closeExportModal}
           onExport={handleExport}
-          data={lista}
-        />
-      )}
-
+          data={lista}/>)}
+      {editingGastoId && (
+      <EditarGastoModal
+        id={editingGastoId}
+        onClose={() => setEditingGastoId(null)}
+        onUpdate={actualizarLista}
+      />
+    )}
       {isDeleteModalOpen && (
         <EliminarGasto
           closeModal={() => setIsDeleteModalOpen(false)}
@@ -209,9 +218,7 @@ function Gastos() {
             eliminarGasto(selectedGastoId!);
             setLista(obtenerGastos());
             setIsDeleteModalOpen(false);
-          }}
-        />
-      )}
+          }}/>)}
     </div>
   );
 }
