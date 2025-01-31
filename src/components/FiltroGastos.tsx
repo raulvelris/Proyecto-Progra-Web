@@ -5,8 +5,10 @@ interface Props {
   setFiltroCategoria: (v: string) => void
   filtroFecha: string
   setFiltroFecha: (v: string) => void
-  filtroMonto: number | null
-  setFiltroMonto: (v: number | null) => void
+  minMonto: number | null
+  setMinMonto: (v: number | null) => void
+  maxMonto: number | null
+  setMaxMonto: (v: number | null) => void
   filtroRec: string
   setFiltroRec: (v: string) => void
 }
@@ -16,19 +18,31 @@ function FiltroGastos({
   setFiltroCategoria,
   filtroFecha,
   setFiltroFecha,
-  filtroMonto,
-  setFiltroMonto,
+  minMonto,
+  setMinMonto,
+  maxMonto,
+  setMaxMonto,
   filtroRec,
   setFiltroRec
 }: Props) {
-  function cambiarMonto(e: React.ChangeEvent<HTMLInputElement>) {
-    const valor = e.target.value
-    if (!valor) {
-      setFiltroMonto(null)
+  function handleMin(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = e.target.value
+    if (!v) {
+      setMinMonto(null)
       return
     }
-    const num = parseFloat(valor)
-    setFiltroMonto(isNaN(num) ? null : num)
+    const n = parseFloat(v)
+    setMinMonto(isNaN(n) ? null : n)
+  }
+
+  function handleMax(e: React.ChangeEvent<HTMLInputElement>) {
+    const v = e.target.value
+    if (!v) {
+      setMaxMonto(null)
+      return
+    }
+    const n = parseFloat(v)
+    setMaxMonto(isNaN(n) ? null : n)
   }
 
   return (
@@ -44,6 +58,12 @@ function FiltroGastos({
           <option value="Alimentación">Alimentación</option>
           <option value="Servicios">Servicios</option>
           <option value="Ocio">Ocio</option>
+          <option value="Comida">Comida</option>
+          <option value="Transporte">Transporte</option>
+          <option value="Salud">Salud</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Estudio">Estudio</option>
+          <option value="Regalo">Regalo</option>
         </select>
       </div>
       <div className="col-auto">
@@ -53,15 +73,27 @@ function FiltroGastos({
           className="form-control form-control-sm"
           value={filtroFecha}
           onChange={e => setFiltroFecha(e.target.value)}
+          placeholder="dd/mm/aaaa"
         />
       </div>
       <div className="col-auto">
-        <label className="form-label mb-0">Monto exacto:</label>
+        <label className="form-label mb-0">Rango de Monto:</label>
         <input
           type="number"
           className="form-control form-control-sm"
-          value={filtroMonto === null ? "" : filtroMonto}
-          onChange={cambiarMonto}
+          value={minMonto === null ? "" : minMonto}
+          onChange={handleMin}
+          placeholder="Min"
+        />
+      </div>
+      <div className="col-auto">
+        <label></label>
+        <input
+          type="number"
+          className="form-control form-control-sm"
+          value={maxMonto === null ? "" : maxMonto}
+          onChange={handleMax}
+          placeholder="Max"
         />
       </div>
       <div className="col-auto">
