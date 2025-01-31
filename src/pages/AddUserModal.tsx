@@ -24,7 +24,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ closeModal, onSave }) => {
     function handleSubmit(u: React.FormEvent) {
         u.preventDefault()
         createUser(userData)
-        alert("Usuario creado correctamente")
         onSave()
         closeModal()
     }

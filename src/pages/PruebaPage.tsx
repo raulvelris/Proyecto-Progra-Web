@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ModalAddGasto from "../components/ModalAddGasto";
+import ModalAddGasto from "./ModalAddGasto";
 import "../../node_modules/bootstrap/dist/css/bootstrap.min.css"; // Importar Bootstrap
 
 const PruebaPage = () => {

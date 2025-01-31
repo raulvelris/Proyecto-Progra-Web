@@ -4,7 +4,7 @@ import { GastoTipo } from "../types/GastoTipo"
 import FiltroGastos from "../components/FiltroGastos"
 import EditarGastoModal from "./EditarGasto"
 import ExportarGastoModal from "./ExportarGastoModal"
-import ModalAddGasto from "../components/ModalAddGasto"
+import ModalAddGasto from "./ModalAddGasto"
 import EliminarGasto from "./EliminarGasto"
 
 function Gastos() {

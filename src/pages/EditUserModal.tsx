@@ -19,7 +19,6 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
   function handleSubmit(u: React.FormEvent) {
     u.preventDefault()
     updateUser(userData)
-    alert("Usuario actualizado correctamente")
     onSave()
     closeModal()
   }

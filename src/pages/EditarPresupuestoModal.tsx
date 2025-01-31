@@ -19,7 +19,6 @@ const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupu
     function handleSubmit(p: React.FormEvent) {
         p.preventDefault()
         actualizarPresupuesto(presupuestoData)
-        alert("Presupuesto actualizado correctamente")
         onSave()
         closeModal()
     }
