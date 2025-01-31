@@ -28,14 +28,14 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
     <div className="modal fade show d-flex align-items-center justify-content-center"
         style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }} aria-modal="true" role="dialog">
         <div className="modal-dialog" style={{ maxWidth: "450px", width: "100%" }}>
-            <div className="modal-content">
-                <div className="modal-header d-flex justify-content-center w-100">
+            <div className="modal-content rounded-5">
+                <div className="modal-header d-flex justify-content-center w-100 border-0">
                     <h4 className="modal-title">Editar Usuario</h4>
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="modal-body">
                         <div className="mb-3 d-flex align-items-center">
-                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>Nombre</label>
+                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Nombre</strong></label>
                             <input
                                 type="text"
                                 name="name"
@@ -46,7 +46,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
                             />
                         </div>
                         <div className="mb-3 d-flex align-items-center">
-                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>Correo</label>
+                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Correo</strong></label>
                             <input
                                 type="email"
                                 name="email"
@@ -57,7 +57,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
                             />
                         </div>
                         <div className="mb-3 d-flex align-items-center">
-                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>Contraseña</label>
+                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Contraseña</strong></label>
                             <input
                                 type="text"
                                 name="password"
@@ -68,7 +68,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
                             />
                         </div>
                         <div className="mb-3 d-flex align-items-center">
-                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>Rol usuario</label>
+                            <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Rol usuario</strong></label>
                             <select
                                 name="role"
                                 className="form-select"
@@ -81,7 +81,7 @@ const EditUserModal: React.FC<EditUserModalProps> = ({ user, closeModal, onSave 
                             </select>
                         </div>
                     </div>
-                    <div className="modal-footer justify-content-center">
+                    <div className="modal-footer justify-content-center border-0">
                         <button type="button" className="btn btn-secondary mx-3" onClick={closeModal}>Cancelar</button>
                         <button type="submit" className="btn btn-primary mx-3">Aceptar</button>
                     </div>

@@ -11,7 +11,7 @@ function UserFilter({
   return (
     <div className="row gx-2 gy-1">
       <div className="mb-3 d-flex align-items-center">
-        <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>Rol</label>
+        <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Rol</strong></label>
         <select
           className="form-select form-select-sm"
           style={{ width: "200px" }}
