@@ -207,10 +207,6 @@
 
 
 
-
-
-
-
 .alert-modal {
   max-width: 500px;
   padding: 2rem;
@@ -235,3 +231,18 @@
 .alert-footer {
   text-align: right;
 }
+
+  /* Espacio entre el titulo-botones y la tabla en ListUsers */
+  .usertable-title {
+    height: 80vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* Elimino bordes de la tabla */
+  .custom-table thead tr,
+  .table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
