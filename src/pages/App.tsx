@@ -4,6 +4,8 @@ import Gastos from "./Gastos"
 //import EditarGasto from "../components/EditarGasto"
 import Dashboard from "./Tablas"
 import "bootstrap/dist/css/bootstrap.min.css"
+import Presupuestos from "./Presupuestos"
+import Configuracion from "./Configuracion"
 
 const App: React.FC = () => {
   return (
@@ -13,6 +15,8 @@ const App: React.FC = () => {
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="gastos" element={<Gastos />} />
+          <Route path="presupuestos" element={<Presupuestos />} />
+        <Route path="configuracion" element={<Configuracion />} />
         </Routes>
       </div>
     </div>

@@ -20,8 +20,8 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
         <Route path="/users" element={<Users />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/app/presupuestos" element={<Presupuestos />} />
-        <Route path="/app/configuracion" element={<Configuracion />} />
+        <Route path="/presupuestos" element={<Presupuestos />} />
+        <Route path="/configuracion" element={<Configuracion />} />
       </Routes>
     </Router>
   </StrictMode>

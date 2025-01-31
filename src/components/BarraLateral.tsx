@@ -20,7 +20,7 @@ const BarraLateral: React.FC = () => {
         <ListGroup.Item
           as={Link} to="/app/dashboard"
           action
-          className="text-secondary active">
+          className="text-secondary">
           <VscGraph /> Dashboard
         </ListGroup.Item>
 
