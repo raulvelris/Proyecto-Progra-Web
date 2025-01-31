@@ -34,7 +34,7 @@ const BarraLateral: React.FC = () => {
 
         <ListGroup.Item
           as={Link}
-          to="#"
+          to="/app/presupuestos"
           action
           className="text-secondary">
           <FaDollarSign /> Presupuestos
@@ -42,7 +42,7 @@ const BarraLateral: React.FC = () => {
 
         <ListGroup.Item
           as={Link}
-          to="#"
+          to="/app/configuracion"
           action
           className="text-muted">
           <FaCog /> Configuración

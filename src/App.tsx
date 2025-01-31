@@ -1,25 +1,20 @@
-import { Routes, Route} from "react-router-dom";
-import BarraLateral from "./components/BarraLateral";
-import Presupuestos from "./pages/Presupuesto";
-import Configuracion from "./pages/Configuracion";
-import Gastos from "./pages/Gastos"
-import Dashboard from "./pages/Tablas"
-import "bootstrap/dist/css/bootstrap.min.css";
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Login from "./pages/Login"
+import App from "./pages/App"
+import RecuperarContraseña from "./pages/RecuperarContraseña"
+import './index.css'
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/app/*" element={<App />} />
+        <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />
+      </Routes>
+    </Router>
+  </StrictMode>
+)
 
-function App() {
-  return (
-    <div className="d-flex">
-      <BarraLateral/>
-      <div className="flex-grow-1">
-        <Routes>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="gastos" element={<Gastos />} />
-          <Route path="presupuestos" element={<Presupuestos />} />
-          <Route path="configuracion" element={<Configuracion />} />
-        </Routes>
-      </div>
-    </div>
-  );
-}
-
-export default App;
+export default App
