@@ -30,7 +30,7 @@ const RegisterPage = () => {
 
     const registerHandler = async (register_user: string, register_email: string, register_pswd: string) => {
         const userData = {
-            user: register_user,
+            name: register_user,
             email: register_email,
             password: register_pswd
         }
@@ -46,6 +46,7 @@ const RegisterPage = () => {
         const data = await resp.json();
         if (data.msg == "") {
             navigate('/confirmation');
+            console.log(data.usuario);
         } else {
             console.log(data.msg);
         }
@@ -92,7 +93,8 @@ const RegisterPage = () => {
             placeholder="Contraseña" value={password} onChange={passwordChange}/>
         <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-4 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
             type="button" onClick={() => {
-                registerClick();
+                registerHandler(user, email, password);
+                // registerClick();
                 // sendEmail();
             }}>Registrar</button>
     </form>

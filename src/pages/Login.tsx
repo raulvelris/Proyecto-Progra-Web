@@ -83,7 +83,10 @@ const Login: React.FC = () => {
           <a className="text-blue-400 underline mb-4 cursor-pointer" 
             onClick={handleForgotPassword}>¿Olvidaste tu contraseña?</a>
           <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-2 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
-            type="button" onClick={handleLogin}>Ingresar</button>
+            type="button" onClick={() => {
+              // handleLogin();
+              loginHandler(email, password);
+            }}>Ingresar</button>
           <p className="text-gray-500 p-1">O</p>
           <button className="bg-gray-500 text-white px-4 py-2 rounded w-84 hover:bg-gray-600 active:bg-gray-700 cursor-pointer transition duration-200" 
             type="button" onClick={handleRegister}>Registrarse</button>
