@@ -137,6 +137,31 @@ function Gastos() {
     setLista(obtenerGastos())
   }
 
+  const addGastoHandler = async (ng_fecha: string, ng_categoria: number, ng_recurrente: boolean, ng_monto: number, ng_descripcion: string) => {
+    const gastoData = {
+      fecha: ng_fecha,
+      categoria: ng_categoria,
+      recurrente: ng_recurrente,
+      monto: ng_monto,
+      descripcion: ng_descripcion
+    }
+
+    const resp = await fetch('http://localhost:5000/gastos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(gastoData)
+    });
+    
+    const data = await resp.json();
+    if (data.msg == "") {
+      console.log("Gasto agregado");
+    } else {
+      console.log(data.msg);
+    }
+  }
+
   return (
     <div className="container mt-4">
       <h2>Mis Gastos</h2>
@@ -237,7 +262,14 @@ function Gastos() {
         <ModalAddGasto
           showModal={isAddModalOpen}
           closeModal={() => setIsAddModalOpen(false)}
-          onGastoCreado={onNuevoGastoCreado}
+          onAddGasto={ async (fecha, categoria, recurrente, monto, descripcion) => {
+            // addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
+            console.log(fecha);
+            console.log(categoria);
+            console.log(recurrente);
+            console.log(monto);
+            console.log(descripcion);
+          }}
         />
       )}
     </div>
