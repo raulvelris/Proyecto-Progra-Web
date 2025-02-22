@@ -5,53 +5,40 @@ import { GastoTipo } from "../types/GastoTipo"
 interface MAGProps {
   showModal: boolean
   closeModal: () => void
-  onGastoCreado: () => void
+  onAddGasto: (fecha: string, categoria: number, recurrente: boolean, monto: number, descripcion: string) => void
 }
 
 const ModalAddGasto = (props: MAGProps) => {
   const [fecha, setFecha] = useState("")
-  const [categoria, setCategoria] = useState("Servicios")
+  const [categoria, setCategoria] = useState<number>(0)
   const [recurrente, setRecurrente] = useState(false)
   const [monto, setMonto] = useState<number | "">("")
   const [descripcion, setDescripcion] = useState("")
 
-  function fechaChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const fechaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFecha(e.target.value)
   }
 
-  function categoriaChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    setCategoria(e.target.value)
+  const categoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategoria(Number(e.target.value))
   }
 
-  function recurrenteChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const recurrenteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setRecurrente(e.target.checked)
   }
 
-  function montoChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const montoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value
     setMonto(val === "" ? "" : Number(val))
   }
 
-  function descripcionChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  const descripcionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescripcion(e.target.value)
   }
 
-  function aceptarClick() {
-    if (monto === "") {
-      return
-    }
-    const nuevoGasto: GastoTipo = {
-      id: 0,
-      fecha,
-      monto: Number(monto),
-      categoria,
-      descripcion,
-      recurrente
-    }
-    crearGasto(nuevoGasto)
-    props.onGastoCreado()
+  const aceptarClick = () => {
     setFecha("")
-    setCategoria("Servicios")
+    setCategoria(0)
     setRecurrente(false)
     setMonto("")
     setDescripcion("")
@@ -85,15 +72,15 @@ const ModalAddGasto = (props: MAGProps) => {
                   value={categoria}
                   onChange={categoriaChange}
                 >
-                  <option>Servicios</option>
-                  <option>Alimentación</option>
-                  <option>Ocio</option>
-                  <option>Comida</option>
-                  <option>Transporte</option>
-                  <option>Salud</option>
-                  <option>Entretenimiento</option>
-                  <option>Estudio</option>
-                  <option>Regalo</option>
+                  <option value={0}>Servicios</option>
+                  <option value={1}>Alimentación</option>
+                  <option value={2}>Ocio</option>
+                  <option value={3}>Comida</option>
+                  <option value={4}>Transporte</option>
+                  <option value={5}>Salud</option>
+                  <option value={6}>Entretenimiento</option>
+                  <option value={7}>Estudio</option>
+                  <option value={8}>Regalo</option>
                 </select>
               </div>
               <div className="d-flex align-items-center">
@@ -132,7 +119,7 @@ const ModalAddGasto = (props: MAGProps) => {
                   onClick={() => {
                     props.closeModal()
                     setFecha("")
-                    setCategoria("Servicios")
+                    setCategoria(0)
                     setRecurrente(false)
                     setMonto("")
                     setDescripcion("")
@@ -144,7 +131,10 @@ const ModalAddGasto = (props: MAGProps) => {
                   style={{ width: "45%" }}
                   type="button"
                   className="btn btn-primary px-4 fw-semibold"
-                  onClick={aceptarClick}
+                  onClick={() => {
+                    props.onAddGasto(fecha, categoria, recurrente, monto == "" ? 0 : monto, descripcion);
+                    aceptarClick();
+                  }}
                 >
                   Aceptar
                 </button>
