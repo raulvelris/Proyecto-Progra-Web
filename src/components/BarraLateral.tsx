@@ -52,7 +52,12 @@ const BarraLateral: React.FC = () => {
           as={Link}
           to="/"
           action
-          className="text-muted salir-item d-flex align-items-center">
+          className="text-muted salir-item d-flex align-items-center"
+          onClick={() => {
+            sessionStorage.removeItem("user");
+            console.log("Saliendo...");
+            // navigate('/');
+          }}>
           <FaSignOutAlt /> Salir
         </ListGroup.Item>
 
