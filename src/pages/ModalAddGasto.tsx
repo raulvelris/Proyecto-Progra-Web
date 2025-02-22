@@ -16,7 +16,7 @@ interface MAGProps {
 
 const ModalAddGasto = (props: MAGProps) => {
   const [fecha, setFecha] = useState("")
-  const [categoria, setCategoria] = useState<number>(0)
+  const [categoria, setCategoria] = useState<number>(1)
   const [recurrente, setRecurrente] = useState(false)
   const [monto, setMonto] = useState<number | "">("")
   const [descripcion, setDescripcion] = useState("")
@@ -43,12 +43,12 @@ const ModalAddGasto = (props: MAGProps) => {
   }
 
   const aceptarClick = () => {
+    props.closeModal()
     setFecha("")
     setCategoria(0)
     setRecurrente(false)
     setMonto("")
     setDescripcion("")
-    props.closeModal()
   }
 
   return (

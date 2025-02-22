@@ -141,15 +141,18 @@ function Gastos() {
   }
 
   const addGastoHandler = async (ng_fecha: string, ng_categoria: number, ng_recurrente: boolean, ng_monto: number, ng_descripcion: string) => {
+    const ng_date = new Date(ng_fecha);
+
     const gastoData = {
-      fecha: ng_fecha,
-      categoria: ng_categoria,
-      recurrente: ng_recurrente,
-      monto: ng_monto,
-      descripcion: ng_descripcion
+      user_id: 1,
+      date: ng_date,
+      amount: ng_monto,
+      description: ng_descripcion,
+      recurring: ng_recurrente,
+      category_id: ng_categoria
     }
 
-    const resp = await fetch('http://localhost:5000/gastos', {
+    const resp = await fetch('http://localhost:5000/add-gasto', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -158,10 +161,11 @@ function Gastos() {
     });
     
     const data = await resp.json();
+
     if (data.msg == "") {
-      console.log("Gasto agregado");
+      console.log(data.gasto);
     } else {
-      console.log(data.msg);
+      console.log("Error al agregar gasto");
     }
   }
 
@@ -279,12 +283,12 @@ function Gastos() {
           showModal={isAddModalOpen}
           closeModal={() => setIsAddModalOpen(false)}
           onAddGasto={ async (fecha, categoria, recurrente, monto, descripcion) => {
-            // addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
-            console.log(fecha);
-            console.log(categoria);
-            console.log(recurrente);
-            console.log(monto);
-            console.log(descripcion);
+            addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
+            // console.log(fecha);
+            // console.log(categoria);
+            // console.log(recurrente);
+            // console.log(monto);
+            // console.log(descripcion);
           }}
           categorias={categorias}
         />
