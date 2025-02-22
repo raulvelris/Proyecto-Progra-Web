@@ -2,10 +2,16 @@ import { useState } from "react"
 import { crearGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo"
 
+export interface Categoria {
+  id: number
+  name: string
+}
+
 interface MAGProps {
   showModal: boolean
   closeModal: () => void
   onAddGasto: (fecha: string, categoria: number, recurrente: boolean, monto: number, descripcion: string) => void
+  categorias: Categoria[]
 }
 
 const ModalAddGasto = (props: MAGProps) => {
@@ -72,15 +78,11 @@ const ModalAddGasto = (props: MAGProps) => {
                   value={categoria}
                   onChange={categoriaChange}
                 >
-                  <option value={0}>Servicios</option>
-                  <option value={1}>Alimentación</option>
-                  <option value={2}>Ocio</option>
-                  <option value={3}>Comida</option>
-                  <option value={4}>Transporte</option>
-                  <option value={5}>Salud</option>
-                  <option value={6}>Entretenimiento</option>
-                  <option value={7}>Estudio</option>
-                  <option value={8}>Regalo</option>
+                  {
+                    props.categorias.map((c: Categoria) => {
+                      return <option key={c.id} value={c.id}>{c.name}</option>
+                    })
+                  }
                 </select>
               </div>
               <div className="d-flex align-items-center">

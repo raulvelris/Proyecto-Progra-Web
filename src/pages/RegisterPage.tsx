@@ -52,8 +52,18 @@ const RegisterPage = () => {
     }
 
     const sendEmail = async () => {
+        const mainpage = 'http://localhost:5173/app/dashboard';
+
+        const text = `
+            <p>Hello,</p>
+            <p>Thank you for registering! Click the link below to access to the main page:</p>
+            <a href="${mainpage}" target="_blank">Go to Main Page</a>
+            <p>If the link doesn't work, copy and paste this URL into your browser:</p>
+            <p>${mainpage}</p>
+        `;
+
         try {
-            const response = await fetch('http://localhost:3001/send-email', {
+            const response = await fetch('http://localhost:5000/register/send-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +71,7 @@ const RegisterPage = () => {
                 body: JSON.stringify({
                     to: email,
                     subject: 'Test',
-                    html: '<p>Este es un correo de prueba enviado desde Resend.</p>',
+                    html: text,
                 }),
             });
             const data = await response.json();

@@ -4,7 +4,7 @@ import { GastoTipo } from "../types/GastoTipo"
 import FiltroGastos from "../components/FiltroGastos"
 import EditarGastoModal from "./EditarGasto"
 import ExportarGastoModal from "./ExportarGastoModal"
-import ModalAddGasto from "./ModalAddGasto"
+import ModalAddGasto, { Categoria } from "./ModalAddGasto"
 import EliminarGasto from "./EliminarGasto"
 
 function Gastos() {
@@ -21,6 +21,8 @@ function Gastos() {
   const [editingGastoId, setEditingGastoId] = useState<number | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+
+  const [categorias, setCategorias] = useState<Categoria[]>([])
 
   const categoryLimits: { [key: string]: number } = {
     Alimentación: 5000,
@@ -72,7 +74,8 @@ function Gastos() {
   }
 
   useEffect(() => {
-    setLista(obtenerGastos())
+    setLista(obtenerGastos());
+    categoriasHandler();
   }, [])
 
   useEffect(() => {
@@ -159,6 +162,19 @@ function Gastos() {
       console.log("Gasto agregado");
     } else {
       console.log(data.msg);
+    }
+  }
+
+  const categoriasHandler = async () => {
+    const resp = await fetch('http://localhost:5000/add-gasto/categories')
+    const data = await resp.json()
+
+    if (data.msg == "") {
+      const listaCategorias = data.categorias;
+      setCategorias(listaCategorias);
+      // console.log(listaCategorias);
+    } else {
+      console.log(`Error al obtener categorias: ${data.msg}`);
     }
   }
 
@@ -270,6 +286,7 @@ function Gastos() {
             console.log(monto);
             console.log(descripcion);
           }}
+          categorias={categorias}
         />
       )}
     </div>
