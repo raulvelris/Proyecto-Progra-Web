@@ -6,7 +6,7 @@ const ConfirmationPage = () => {
     const navigate = useNavigate();
 
     const redirectClick = () => {
-        navigate('/app/dashboard');
+        navigate('/');
     }
 
     return <div className="flex justify-center items-center h-screen bg-gray-200">

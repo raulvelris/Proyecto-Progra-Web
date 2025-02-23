@@ -151,11 +151,18 @@ function Gastos() {
       category_id: ng_categoria
     }
 
+    const user = localStorage.getItem('user');
+    let token = '';
+    if (user) {
+      const userInfo = JSON.parse(user);
+      token = userInfo.token;
+    }
+
     const resp = await fetch('http://localhost:5000/add-gasto', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJzdGJuQCIsImlhdCI6MTc0MDM0Mjc3NH0.7EChWwj7ddqr4NUxKV854ywvwbKw4dwlLM5Ut3Np564'
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(gastoData)
     });

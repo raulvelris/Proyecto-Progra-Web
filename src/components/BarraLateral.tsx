@@ -54,7 +54,7 @@ const BarraLateral: React.FC = () => {
           action
           className="text-muted salir-item d-flex align-items-center"
           onClick={() => {
-            sessionStorage.removeItem("user");
+            localStorage.removeItem("user");
             console.log("Saliendo...");
             // navigate('/');
           }}>
