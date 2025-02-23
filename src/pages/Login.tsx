@@ -10,6 +10,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [user, setUser] = useState<any>(null);
   
   const emailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -51,12 +52,15 @@ const Login: React.FC = () => {
       },
       body: JSON.stringify(userData)
     });
-
+    
     const data = await resp.json();
+
     if (data.msg == "") {
-      const userJSON = JSON.stringify(userData);
-      console.log(userJSON);
-      sessionStorage.setItem('user', userJSON);
+      console.log(data.body);
+      setUser(data.body);
+      setEmail('');
+      setPassword('');
+      // sessionStorage.setItem('user', userJSON);
       navigate('/app/dashboard');
     } else {
       setShowModal(true);
