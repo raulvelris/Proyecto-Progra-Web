@@ -54,13 +54,14 @@ const Login: React.FC = () => {
     });
     
     const data = await resp.json();
+    const token = data.body;
 
     if (data.msg == "") {
       console.log(data.body);
-      setUser(data.body);
+      setUser(token);
       setEmail('');
       setPassword('');
-      // sessionStorage.setItem('user', userJSON);
+      localStorage.setItem('user', JSON.stringify(token));
       navigate('/app/dashboard');
     } else {
       setShowModal(true);
@@ -69,9 +70,11 @@ const Login: React.FC = () => {
 
   // Verificar si el usuario ya está autenticado al cargar el componente
   useEffect(() => {
-    const userJSON = sessionStorage.getItem("user");
-    if (userJSON) {
-        navigate('app/dashboard'); // Redirigir si ya está autenticado
+    const loggedUser = localStorage.getItem("user");
+    if (loggedUser) {
+      const userInfo = JSON.parse(loggedUser);
+      setUser(userInfo);
+      navigate('app/dashboard'); // Redirigir si ya está autenticado
     }
   }, [navigate]);
 
@@ -81,9 +84,21 @@ const Login: React.FC = () => {
         <div className="flex flex-col items-center border-none rounded-xl bg-white p-10 pb-5">
           <h1 className="text-3xl font-bold text-gray-700 mb-10">Log In</h1>
           <input className="border border-gray-400 rounded px-4 py-2 w-84 my-2" 
-            type="text" placeholder="Ingresar correo" value={email} onChange={emailChange}/>
+            type="text" placeholder="Ingresar correo" value={email} onChange={emailChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                loginHandler(email, password);
+              }
+            }}
+            />
           <input className="border border-gray-400 rounded px-4 py-2 w-84 my-2" 
-            type="password" placeholder="Ingresar contraseña" value={password} onChange={passwordChange}/>
+            type="password" placeholder="Ingresar contraseña" value={password} onChange={passwordChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                loginHandler(email, password);
+              }
+            }}
+            />
           <a className="text-blue-400 underline mb-4 cursor-pointer" 
             onClick={handleForgotPassword}>¿Olvidaste tu contraseña?</a>
           <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-2 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
