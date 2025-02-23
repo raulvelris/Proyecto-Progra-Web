@@ -144,7 +144,6 @@ function Gastos() {
     const ng_date = new Date(ng_fecha);
 
     const gastoData = {
-      user_id: 1,
       date: ng_date,
       amount: ng_monto,
       description: ng_descripcion,
@@ -155,7 +154,8 @@ function Gastos() {
     const resp = await fetch('http://localhost:5000/add-gasto', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJzdGJuQCIsImlhdCI6MTc0MDM0Mjc3NH0.7EChWwj7ddqr4NUxKV854ywvwbKw4dwlLM5Ut3Np564'
       },
       body: JSON.stringify(gastoData)
     });
