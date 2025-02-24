@@ -1,3 +1,5 @@
+//ruta de dashboards para users
+
 import Graficos from "../components/Graficos"
 
 function Dashboard() {
