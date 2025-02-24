@@ -41,7 +41,6 @@ const RecuperarContraseña = () => {
               // Cambio de contraseña exitoso"
               const userJSON = JSON.stringify(userData)
               console.log(userJSON)
-              sessionStorage.setItem("usuario", userJSON)
               console.log("Cambio de contraseña exitoso")
               navigate("/")
               
