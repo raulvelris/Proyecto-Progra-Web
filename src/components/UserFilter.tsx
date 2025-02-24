@@ -1,13 +1,9 @@
-interface Props {
-    filterRole: string
-    setFilterRole: (val: string) => void
+interface UserFilterProps {
+    filterRole: number
+    setFilterRole: (val: number) => void
 }
 
-function UserFilter({
-    filterRole,
-    setFilterRole
-}: Props) {
-
+const UserFilter = (props : UserFilterProps) => {
   return (
     <div className="row gx-2 gy-1">
       <div className="mb-3 d-flex align-items-center">
@@ -15,12 +11,12 @@ function UserFilter({
         <select
           className="form-select form-select-sm"
           style={{ width: "200px" }}
-          value={filterRole}
-          onChange={u => setFilterRole(u.target.value)}
+          value={props.filterRole}
+          onChange={u => props.setFilterRole(Number(u.target.value))}
         >
-          <option value="">Todos</option>
-          <option value="User">User</option>
-          <option value="Admin">Admin</option>
+          <option value={0}>Todos</option>
+          <option value={1}>User</option>
+          <option value={2}>Admin</option>
         </select>
       </div>
     </div>
