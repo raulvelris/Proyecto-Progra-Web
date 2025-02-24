@@ -5,13 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import AgregarPresupuestoModal from "./AgregarPresupuestoModal";
 import EliminarPresupuestoModal from "./EliminarPresupuestoModal";
 import EditarPresupuestoModal from "./EditarPresupuestoModal";
+import { Categoria } from "./ModalAddGasto";
 
 const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000"
-
-export interface Categoria {
-    id: number,
-    nombre: string
-}
 
 export interface ListadoPresupuestoItem {
     id: number,
@@ -35,6 +31,7 @@ const ListadoPresupuestos = (props: ListadoPresupuestosProps) => {
     const [showModalEditar, setShowModalEditar] = useState<boolean>(false)
     const [presupuestoIdEliminar, setPresupuestoIdEliminar] = useState<number | null>(null)
     const [presupuestoEditar, setPresupuestoEditar] = useState<ListadoPresupuestoItem | null>(null)
+    const [categorias, setCategorias] = useState<Categoria[]>([])
 
     const httpGuardarPresupuesto = async (categoriaId: number, monto: number) => {
         const url = URL_BACKEND + "/presupuesto"
@@ -69,14 +66,25 @@ const ListadoPresupuestos = (props: ListadoPresupuestosProps) => {
     }
 
     const httpObtenerCategorias = async () => {
-        const url = URL_BACKEND + "/categorias"
-        const resp = await fetch(url)
+        // const url = URL_BACKEND + "/categorias"
+        // const resp = await fetch(url)
+        // const data = await resp.json()
+        // if (data.msg === "") {
+        //     const listaCategorias = data.categorias
+        //     setCategoria(listaCategorias)
+        // } else {
+        //     console.log(`Error al obtener categorias: ${data.msg}`)
+        // }
+
+        const resp = await fetch('http://localhost:5000/add-gasto/categories')
         const data = await resp.json()
-        if (data.msg === "") {
-            const listaCategorias = data.categorias
-            setCategoria(listaCategorias)
+
+        if (data.msg == "") {
+        const listaCategorias = data.categorias;
+        setCategorias(listaCategorias);
+        // console.log(listaCategorias);
         } else {
-            console.log(`Error al obtener categorias: ${data.msg}`)
+        console.log(`Error al obtener categorias: ${data.msg}`);
         }
     }
 
@@ -185,7 +193,7 @@ const ListadoPresupuestos = (props: ListadoPresupuestosProps) => {
                                 <tr key={presupuesto.id}>
                                     <td>{
                                         presupuesto.categoria != null
-                                            ? presupuesto.categoria.nombre
+                                            ? presupuesto.categoria.name
                                             : "-"
                                     }
                                     </td>
@@ -209,7 +217,7 @@ const ListadoPresupuestos = (props: ListadoPresupuestosProps) => {
                 showModal={showModalPresupuesto}
                 closeModal={closeModalPresupuesto}
                 onGuardarPresupuesto={handleGuardarPresupuesto}
-                categorias={categoria}
+                categorias={categorias}
             />
             {showModalEliminar && (
                 <EliminarPresupuestoModal

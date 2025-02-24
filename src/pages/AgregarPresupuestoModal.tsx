@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Categoria } from "./Presupuestos"
+import { Categoria } from "./ModalAddGasto"
 
 interface AgregarPresupuestoModalProps {
     showModal: boolean,
@@ -42,9 +42,11 @@ const AgregarPresupuestoModal = (props: AgregarPresupuestoModalProps) => {
                                     name="categoria"
                                     value={categoriaId}
                                     onChange={categoriaChangeHandler}>
-                                    {props.categorias.map(categoria => (
-                                        <option key={categoria.id} value={categoria.id}>{categoria.nombre}</option>
-                                    ))}
+                                    {
+                                        props.categorias.map((c: Categoria) => {
+                                            return <option key={c.id} value={c.id}>{c.name}</option>
+                                        })
+                                    }
                                 </select>
                             </div>
 
