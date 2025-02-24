@@ -1,3 +1,5 @@
+//Dashboard para admin
+
 import React from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";

@@ -1,131 +1,130 @@
-// EditarGastoModal.tsx (nuevo componente modal)
-import React, { useEffect, useState } from "react"
-import { GastoTipo } from "../types/GastoTipo"
-import { obtenerGastoPorId, actualizarGasto } from "../services/GastoService"
+// src/pages/EditarGasto.tsx
+import React, { useEffect, useState } from "react";
+import { GastoTipo } from "../types/GastoTipo";
+import { actualizarGasto } from "../services/GastoService";
+import { CategoriaTipo } from "../services/CategoryService";
 
-interface Props {
-  id: number | null
-  onClose: () => void
-  onUpdate: () => void
+interface EditarGastoProps {
+  showModal: boolean;
+  closeModal: () => void;
+  onUpdate: () => void;
+  gasto: GastoTipo;            // Pasamos el gasto completo
+  categorias: CategoriaTipo[]; // Para mostrar en dropdown
 }
 
-function EditarGasto({ id, onClose, onUpdate }: Props) {
-  const [dato, setDato] = useState<GastoTipo | null>(null)
-  
+const EditarGasto: React.FC<EditarGastoProps> = ({ showModal, closeModal, onUpdate, gasto, categorias }) => {
+  const [fecha, setFecha] = useState(gasto.date);
+  const [categoriaId, setCategoriaId] = useState(gasto.category_id);
+  const [recurrente, setRecurrente] = useState(gasto.recurring);
+  const [monto, setMonto] = useState<number | "">(gasto.amount);
+  const [descripcion, setDescripcion] = useState(gasto.description);
+
   useEffect(() => {
-    if (!id) return
-    
-    const cargarDatos = () => {
-      const enc = obtenerGastoPorId(id)
-      if (!enc) {
-        onClose()
-        return
-      }
-      setDato(enc)
-    }
-    
-    cargarDatos()
-  }, [id, onClose])
+    // Cada vez que el modal se abra con un gasto nuevo, sincroniza estado
+    setFecha(gasto.date);
+    setCategoriaId(gasto.category_id);
+    setRecurrente(gasto.recurring);
+    setMonto(gasto.amount);
+    setDescripcion(gasto.description);
+  }, [gasto]);
 
-  function cambio(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-    if (!dato) return
-    let val: string | number | boolean = e.target.value
-    if (e.target.name === "monto") val = parseFloat(val as string) || 0
-    if (e.target.name === "recurrente") val = (e.target as HTMLInputElement).checked
-    setDato({ ...dato, [e.target.name]: val })
+  if (!showModal) return null;
+
+  async function handleAceptar() {
+    const updated: GastoTipo = {
+      ...gasto,
+      date: fecha,
+      category_id: categoriaId,
+      recurring: recurrente,
+      amount: monto === "" ? 0 : Number(monto),
+      description
+    };
+    await actualizarGasto(updated);
+    onUpdate();
+    handleClose();
   }
 
-  function enviar(e: React.FormEvent) {
-    e.preventDefault()
-    if (!dato) return
-    actualizarGasto(dato)
-    onUpdate()
-    onClose()
+  function handleClose() {
+    closeModal();
   }
-
-  if (!id || !dato) return null
 
   return (
-    <div className="modal-overlay">
-      <div className="modal-contenido">
-        <button className="cerrar-modal" onClick={onClose}>&times;</button>
-        
-        <h2>Editar Gasto</h2>
-        <form className="row g-3" onSubmit={enviar}>
-          {/* Mantenemos todo el formulario original */}
-          <div className="col-md-6">
-            <label className="form-label">Fecha</label>
-            <input
-              type="date"
-              name="fecha"
-              className="form-control"
-              value={dato.fecha}
-              onChange={cambio}
-            />
+    <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} tabIndex={-1}>
+      <div className="modal-dialog modal-dialog-centered">
+        <div className="modal-content p-3">
+          <div className="modal-header border-0 text-center">
+            <h5 className="modal-title w-100">Editar gasto</h5>
           </div>
-          
-          {/* Campo de Monto */}
-        <div className="col-md-6">
-          <label className="form-label">Monto</label>
-          <input
-            type="number"
-            name="monto"
-            className="form-control"
-            value={dato.monto}
-            onChange={cambio}
-          />
-        </div>
-
-        {/* Selector de Categoría */}
-        <div className="col-md-6">
-          <label className="form-label">Categoría</label>
-          <select
-            name="categoria"
-            className="form-select"
-            value={dato.categoria}
-            onChange={cambio}
-          >
-            <option value="Alimentación">Alimentación</option>
-            <option value="Servicios">Servicios</option>
-            <option value="Ocio">Ocio</option>
-          </select>
-        </div>
-
-        {/* Checkbox Recurrente */}
-        <div className="col-md-6 d-flex align-items-center">
-          <label className="form-label me-2 mb-0">Recurrente</label>
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              name="recurrente"
-              checked={dato.recurrente}
-              onChange={cambio}
-            />
+          <div className="modal-body">
+            <form onSubmit={(e) => e.preventDefault()}>
+              <div className="mb-3">
+                <label className="fw-bold">Fecha</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  value={fecha}
+                  onChange={(e) => setFecha(e.target.value)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="fw-bold">Categoría</label>
+                <select
+                  className="form-select"
+                  value={categoriaId}
+                  onChange={(e) => setCategoriaId(Number(e.target.value))}
+                >
+                  {categorias.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-check form-switch mb-3">
+                <label className="form-check-label fw-bold">Recurrente</label>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={recurrente}
+                  onChange={(e) => setRecurrente(e.target.checked)}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="fw-bold">Monto</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  value={monto}
+                  onChange={(e) =>
+                    setMonto(e.target.value === "" ? "" : Number(e.target.value))
+                  }
+                />
+              </div>
+              <div className="mb-3">
+                <label className="fw-bold">Descripción</label>
+                <textarea
+                  className="form-control"
+                  rows={3}
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                />
+              </div>
+            </form>
           </div>
-        </div>
-
-        {/* Campo de Descripción */}
-        <div className="col-12">
-          <label className="form-label">Descripción</label>
-          <input
-            type="text"
-            name="descripcion"
-            className="form-control"
-            value={dato.descripcion}
-            onChange={cambio}
-          />
-        </div>
-          
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary">
-              Guardar
+          <div className="modal-footer border-0 d-flex justify-content-between">
+            <button type="button" className="btn btn-secondary" onClick={handleClose}>
+              Cancelar
+            </button>
+            <button type="button" className="btn btn-primary" onClick={handleAceptar}>
+              Aceptar
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditarGasto
+export default EditarGasto;
+
+

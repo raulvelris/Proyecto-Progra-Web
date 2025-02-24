@@ -1,50 +1,52 @@
-import { useMemo } from "react"
-import { Bar } from "react-chartjs-2"
-import "chart.js/auto"
-import { obtenerGastos } from "../services/GastoService"
+// src/pages/Graficos.tsx
+import React, { useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
+import { getGastosMensuales, getGastosPorCategoria } from "../services/dashboardService";
 
-function Graficos() {
-  const gastos = obtenerGastos()
+// Opcional: puedes definir nombres de meses de forma global.
+const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
-  const datosMes = useMemo(() => {
-    const mapaMes: Record<string, number> = {
-      Ene: 0, Feb: 0, Mar: 0, Abr: 0, May: 0, Jun: 0,
-      Jul: 0, Ago: 0, Sep: 0, Oct: 0, Nov: 0, Dic: 0
-    }
-    const nombres = Object.keys(mapaMes)
-    gastos.forEach(g => {
-      const idx = new Date(g.fecha).getMonth()
-      const mes = nombres[idx] || "?"
-      mapaMes[mes] += g.monto
-    })
-    return {
-      labels: Object.keys(mapaMes),
-      datasets: [
-        {
-          label: "Gastos mensuales",
-          data: Object.values(mapaMes),
-          backgroundColor: "rgba(54, 162, 235, 0.6)"
-        }
-      ]
-    }
-  }, [gastos])
+const Graficos: React.FC = () => {
+  const [mensuales, setMensuales] = useState<any[]>([]);
+  const [porCategoria, setPorCategoria] = useState<any[]>([]);
 
-  const datosCat = useMemo(() => {
-    const mapaCat: Record<string, number> = {}
-    gastos.forEach(g => {
-      mapaCat[g.categoria] = (mapaCat[g.categoria] || 0) + g.monto
-    })
-    return {
-      labels: Object.keys(mapaCat),
-      datasets: [
-        {
-          label: "Gastos por categoría",
-          data: Object.values(mapaCat),
-          backgroundColor: "rgba(255, 99, 132, 0.6)"
-        }
-      ]
+  useEffect(() => {
+    async function cargarReportes() {
+      const datosMensuales = await getGastosMensuales();
+      const datosCategoria = await getGastosPorCategoria();
+      setMensuales(datosMensuales);
+      setPorCategoria(datosCategoria);
     }
-  }, [gastos])
+    cargarReportes();
+  }, []);
+
+  // Construir datos para gráfico de gastos mensuales.
+  const datosMes = {
+    labels: mensuales.map(item => {
+      // item.mes debería ser una fecha (ej. "2025-01-01T00:00:00.000Z")
+      const date = new Date(item.mes);
+      return monthNames[date.getMonth()];
+    }),
+    datasets: [
+      {
+        label: "Gastos mensuales",
+        data: mensuales.map(item => Number(item.total)),
+        backgroundColor: "rgba(54, 162, 235, 0.6)"
+      }
+    ]
+  };
+
+  // Construir datos para gráfico de gastos por categoría.
+  const datosCat = {
+    labels: porCategoria.map(item => item["category.name"]), // Si usas raw: true, el nombre queda en esta propiedad.
+    datasets: [
+      {
+        label: "Gastos por categoría",
+        data: porCategoria.map(item => Number(item.total)),
+        backgroundColor: "rgba(255, 99, 132, 0.6)"
+      }
+    ]
+  };
 
   return (
     <div className="row">
@@ -61,7 +63,7 @@ function Graficos() {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Graficos
+export default Graficos;
