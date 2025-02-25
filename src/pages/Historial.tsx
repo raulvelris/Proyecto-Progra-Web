@@ -1,7 +1,22 @@
-import React from 'react';
-import { Table } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Table } from "react-bootstrap";
+import { getAccessLogs } from "../services/AccessLogService";
 
-interface HI {
+
+
+
+interface AccessLogAPIResponse {
+  id: number;
+  nombre?: string;
+  correo?: string;
+  createdAt: string;
+  action: string;
+}
+
+
+
+
+interface AccessLog {
   id: string;
   nombre: string;
   correo: string;
@@ -10,14 +25,30 @@ interface HI {
   accion: string;
 }
 
+
 const TablaH: React.FC = () => {
-  const DataH: HI[] = [
-    { id: '001', nombre: 'Jessica', correo: 'jess@taxes.com', fecha: '12/12/2024', hora: '17:50', accion: 'Borrar' },
-    { id: '002', nombre: 'Jhon', correo: 'jon@taxes.com', fecha: '17/12/2024', hora: '19:50', accion: 'Agregar' },
-    { id: '003', nombre: 'Diego', correo: 'dieg@taxes.com', fecha: '22/12/2024', hora: '14:20', accion: 'Editar' },
-    { id: '004', nombre: 'Juan', correo: 'juan@taxes.com', fecha: '02/12/2024', hora: '13:50', accion: 'Borrar' },
-    { id: '005', nombre: 'Luis', correo: 'luis@taxes.com', fecha: '07/12/2024', hora: '12:50', accion: 'Borrar' },
-  ];
+  
+  const [logs, setLogs] = useState<AccessLog[]>([]);
+
+
+  useEffect(() => {
+    const fetchLogs = async () => {
+      const data: AccessLogAPIResponse[] = await getAccessLogs();
+      if (data) {
+        
+        const formattedLogs: AccessLog[] = data.map((log) => ({
+          id: log.id.toString(),
+          nombre: log.nombre || "Desconocido",
+          correo: log.correo || "N/A",
+          fecha: new Date(log.createdAt).toLocaleDateString(),
+          hora: new Date(log.createdAt).toLocaleTimeString(),
+          accion: log.action,
+        }));
+        setLogs(formattedLogs);
+      }
+    };
+    fetchLogs();
+  }, []);
 
 
   return (
@@ -36,7 +67,7 @@ const TablaH: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {DataH.map((item) => (
+            {logs.map((item) => (
               <tr key={item.id}>
                 <td>{item.id}</td>
                 <td>{item.nombre}</td>
@@ -53,5 +84,5 @@ const TablaH: React.FC = () => {
   );
 };
 
-export default TablaH;
 
+export default TablaH;
