@@ -6,16 +6,25 @@ import { CategoriaTipo } from "../services/CategoryService";
 interface ModalAddGastoProps {
   showModal: boolean;
   closeModal: () => void;
-  onAddGasto: () => void; // para recargar la lista en Gastos
-  categorias: CategoriaTipo[]; // lista de {id, name}
+  onAddGasto: () => void; // para recargar
+  categorias: CategoriaTipo[];
 }
 
-const ModalAddGasto: React.FC<ModalAddGastoProps> = ({ showModal, closeModal, onAddGasto, categorias }) => {
+const ModalAddGasto: React.FC<ModalAddGastoProps> = ({
+  showModal,
+  closeModal,
+  onAddGasto,
+  categorias
+}) => {
   const [fecha, setFecha] = useState("");
-  const [categoriaId, setCategoriaId] = useState<number>(categorias.length > 0 ? categorias[0].id : 1);
+  const [categoriaId, setCategoriaId] = useState<number>(
+    categorias.length > 0 ? categorias[0].id : 1
+  );
   const [recurrente, setRecurrente] = useState(false);
   const [monto, setMonto] = useState<number | "">("");
   const [descripcion, setDescripcion] = useState("");
+
+  if (!showModal) return null;
 
   async function handleAceptar() {
     await crearGasto({
@@ -25,12 +34,13 @@ const ModalAddGasto: React.FC<ModalAddGastoProps> = ({ showModal, closeModal, on
       recurring: recurrente,
       category_id: categoriaId
     });
-    onAddGasto(); // recargar
+    onAddGasto(); // recarga la lista en Gastos
     handleClose();
   }
 
   function handleClose() {
     closeModal();
+    // Limpiar
     setFecha("");
     setCategoriaId(categorias.length > 0 ? categorias[0].id : 1);
     setRecurrente(false);
@@ -38,10 +48,12 @@ const ModalAddGasto: React.FC<ModalAddGastoProps> = ({ showModal, closeModal, on
     setDescripcion("");
   }
 
-  if (!showModal) return null;
-
   return (
-    <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} tabIndex={-1}>
+    <div
+      className="modal fade show d-block"
+      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      tabIndex={-1}
+    >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content p-3">
           <div className="modal-header border-0 text-center">
@@ -87,7 +99,9 @@ const ModalAddGasto: React.FC<ModalAddGastoProps> = ({ showModal, closeModal, on
                   type="number"
                   className="form-control"
                   value={monto}
-                  onChange={(e) => setMonto(e.target.value === "" ? "" : Number(e.target.value))}
+                  onChange={(e) =>
+                    setMonto(e.target.value === "" ? "" : Number(e.target.value))
+                  }
                 />
               </div>
               <div className="mb-3">

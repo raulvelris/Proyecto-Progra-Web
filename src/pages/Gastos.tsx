@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { obtenerGastos } from "../services/GastoService";
 import { GastoTipo } from "../types/GastoTipo";
 import FiltroGastos from "../components/FiltroGastos";
-import EditarGastoModal from "./EditarGasto";
+import EditarGasto from "./EditarGasto";            // <--- Asegúrate que se llama igual
 import ExportarGastoModal from "./ExportarGastoModal";
 import ModalAddGasto from "./ModalAddGasto";
 import EliminarGasto from "./EliminarGasto";
@@ -35,7 +35,7 @@ function Gastos() {
   async function cargarGastos() {
     const gastosBD = await obtenerGastos();
     setLista(gastosBD);
-    // Opcional: Notificar al Dashboard que cambió algo
+    // Podrías notificar a Dashboard si quieres recargar
   }
 
   async function cargarCategorias() {
@@ -43,34 +43,36 @@ function Gastos() {
     setCategorias(cats);
   }
 
-  // Mapea category_id => nombre
-  function getCategoryName(catId: number): string {
-    const cat = categorias.find((c) => c.id === catId);
-    return cat ? cat.name : String(catId);
+  // Mapea category_id -> category.name
+  function getCategoryName(id: number): string {
+    const cat = categorias.find((c) => c.id === id);
+    return cat ? cat.name : String(id);
   }
 
-  // Mapea nombre => category_id (para filtrar)
+  // Mapea nombre -> category_id (para filtrar)
   function getCategoryIdByName(name: string): number | null {
     const cat = categorias.find((c) => c.name === name);
     return cat ? cat.id : null;
   }
 
-  // Filtrado local
   const datosFiltrados = useMemo(() => {
     return lista.filter((g) => {
-      // 1) Filtro por nombre de categoría
+      // Filtro por nombre de categoría
       let cOk = true;
       if (filtroCategoria) {
         const catId = getCategoryIdByName(filtroCategoria);
         cOk = catId != null && g.category_id === catId;
       }
-      // 2) Filtro fecha
+
+      // Filtro por fecha
       let fOk = !filtroFecha || g.date === filtroFecha;
-      // 3) Filtro rango
+
+      // Rango de montos
       let mOk = true;
       if (minMonto !== null && g.amount < minMonto) mOk = false;
       if (maxMonto !== null && g.amount > maxMonto) mOk = false;
-      // 4) Filtro recurrente
+
+      // Filtro recurrente
       let rOk = true;
       if (filtroRec === "si") rOk = g.recurring === true;
       if (filtroRec === "no") rOk = g.recurring === false;
@@ -79,14 +81,14 @@ function Gastos() {
     });
   }, [lista, filtroCategoria, filtroFecha, minMonto, maxMonto, filtroRec, categorias]);
 
-  function handleDeleteClick(g: GastoTipo) {
-    setSelectedGasto(g);
-    setIsDeleteModalOpen(true);
-  }
-
   function handleEditClick(g: GastoTipo) {
     setSelectedGasto(g);
     setIsEditModalOpen(true);
+  }
+
+  function handleDeleteClick(g: GastoTipo) {
+    setSelectedGasto(g);
+    setIsDeleteModalOpen(true);
   }
 
   function handleAddClick() {
@@ -167,7 +169,7 @@ function Gastos() {
         </tbody>
       </table>
 
-      {/* Exportar */}
+      {/* Exportar Modal */}
       {isExportModalOpen && (
         <ExportarGastoModal
           closeModal={() => setIsExportModalOpen(false)}
@@ -176,7 +178,7 @@ function Gastos() {
         />
       )}
 
-      {/* Editar */}
+      {/* Editar Modal */}
       {isEditModalOpen && selectedGasto && (
         <EditarGasto
           showModal={isEditModalOpen}
@@ -190,26 +192,24 @@ function Gastos() {
         />
       )}
 
-      {/* Eliminar */}
+      {/* Eliminar Modal */}
       {isDeleteModalOpen && selectedGasto && (
         <EliminarGasto
           closeModal={() => setIsDeleteModalOpen(false)}
           onDelete={() => {
             cargarGastos();
-            setIsDeleteModalOpen(false);
           }}
           gastoId={selectedGasto.id}
         />
       )}
 
-      {/* Agregar */}
+      {/* Agregar Modal */}
       {isAddModalOpen && (
         <ModalAddGasto
           showModal={isAddModalOpen}
           closeModal={() => setIsAddModalOpen(false)}
           onAddGasto={() => {
             cargarGastos();
-            setIsAddModalOpen(false);
           }}
           categorias={categorias}
         />
