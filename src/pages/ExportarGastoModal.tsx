@@ -8,7 +8,11 @@ interface ExportarGastoModalProps {
   data: GastoTipo[];
 }
 
-const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onExport, data }) => {
+const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({
+  closeModal,
+  onExport,
+  data
+}) => {
   const [selectedFormat, setSelectedFormat] = useState<"csv" | "pdf">("csv");
 
   const handleExport = async () => {
@@ -18,12 +22,14 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onE
       await exportarPDF(data);
     }
     onExport(selectedFormat);
-  };
+  }
 
   return (
-    <div className="modal fade show d-flex align-items-center justify-content-center"
+    <div
+      className="modal fade show d-flex align-items-center justify-content-center"
       style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
-      aria-modal="true" role="dialog"
+      aria-modal="true"
+      role="dialog"
     >
       <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: "400px", width: "100%" }}>
         <div className="modal-content shadow-lg rounded-3">
@@ -34,8 +40,13 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onE
             <p className="mb-3">Selecciona el formato de exportación:</p>
             <div className="d-flex flex-column align-items-start px-4">
               <div className="form-check mb-2">
-                <input className="form-check-input" type="radio" name="exportFormat"
-                  id="exportCsv" value="csv" checked={selectedFormat === "csv"}
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="exportFormat"
+                  id="exportCsv"
+                  value="csv"
+                  checked={selectedFormat === "csv"}
                   onChange={() => setSelectedFormat("csv")}
                 />
                 <label className="form-check-label ms-2" htmlFor="exportCsv">
@@ -43,8 +54,13 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onE
                 </label>
               </div>
               <div className="form-check">
-                <input className="form-check-input" type="radio" name="exportFormat"
-                  id="exportPdf" value="pdf" checked={selectedFormat === "pdf"}
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="exportFormat"
+                  id="exportPdf"
+                  value="pdf"
+                  checked={selectedFormat === "pdf"}
                   onChange={() => setSelectedFormat("pdf")}
                 />
                 <label className="form-check-label ms-2" htmlFor="exportPdf">
@@ -54,10 +70,18 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({ closeModal, onE
             </div>
           </div>
           <div className="modal-footer d-flex justify-content-center">
-            <button type="button" className="btn btn-outline-secondary px-4" onClick={closeModal}>
+            <button
+              type="button"
+              className="btn btn-outline-secondary px-4"
+              onClick={closeModal}
+            >
               Cancelar
             </button>
-            <button type="button" className="btn btn-primary px-4" onClick={handleExport}>
+            <button
+              type="button"
+              className="btn btn-primary px-4"
+              onClick={handleExport}
+            >
               Aceptar
             </button>
           </div>

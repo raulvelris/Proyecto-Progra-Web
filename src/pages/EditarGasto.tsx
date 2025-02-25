@@ -1,34 +1,39 @@
-// src/pages/EditarGasto.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
+import { obtenerGastos, editGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo";
-import { actualizarGasto } from "../services/GastoService";
-import { CategoriaTipo } from "../services/CategoryService";
 
-interface EditarGastoProps {
-  showModal: boolean;
-  closeModal: () => void;
-  onUpdate: () => void;
-  gasto: GastoTipo;            // Pasamos el gasto completo
-  categorias: CategoriaTipo[]; // Para mostrar en dropdown
+
+
+interface Props {
+  id: number | null
+  onClose: () => void
+  onUpdate: () => void
+
 }
 
-const EditarGasto: React.FC<EditarGastoProps> = ({ showModal, closeModal, onUpdate, gasto, categorias }) => {
-  const [fecha, setFecha] = useState(gasto.date);
-  const [categoriaId, setCategoriaId] = useState(gasto.category_id);
-  const [recurrente, setRecurrente] = useState(gasto.recurring);
-  const [monto, setMonto] = useState<number | "">(gasto.amount);
-  const [descripcion, setDescripcion] = useState(gasto.description);
+const EditarGasto = ({ id, onClose, onUpdate}: Props) => {
+  const [dato, setDato] = useState<GastoTipo | null>(null)
 
   useEffect(() => {
-    // Cada vez que el modal se abra con un gasto nuevo, sincroniza estado
-    setFecha(gasto.date);
-    setCategoriaId(gasto.category_id);
-    setRecurrente(gasto.recurring);
-    setMonto(gasto.amount);
-    setDescripcion(gasto.description);
-  }, [gasto]);
-
-  if (!showModal) return null;
+    if (!id) return
+    
+    const cargarDatos = async () => {
+      try {
+        const gastos = await obtenerGastos()
+        const enc = gastos.find(gasto => gasto.id === id)
+        if (!enc) {
+          onClose()
+          return
+        }
+        setDato(enc)
+      } catch (error) {
+        console.error("Error al obtener el gasto:", error)
+        onClose()
+      }
+    }
+    
+    cargarDatos()
+  }, [id, onClose])
 
   async function handleAceptar() {
     const updated: GastoTipo = {
@@ -43,86 +48,78 @@ const EditarGasto: React.FC<EditarGastoProps> = ({ showModal, closeModal, onUpda
     onUpdate();
     handleClose();
   }
-
-  function handleClose() {
-    closeModal();
+        
+  function cambio(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    if (!dato) return
+    let val: string | number | boolean = e.target.value
+    if (e.target.name === "amount") val = parseFloat(val as string) || 0
+    if (e.target.name === "recurring") val = (e.target as HTMLInputElement).checked
+    setDato({ ...dato, [e.target.name]: val })
   }
 
+  async function enviar() {
+    if (!dato) return
+    try {
+      await editGasto(dato)
+      onUpdate()
+      onClose()
+    } catch (error) {
+      console.error("Error al actualizar el gasto:", error)
+    }
+  }
+
+  if (!id || !dato) return null
+
   return (
-    <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} tabIndex={-1}>
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content p-3">
-          <div className="modal-header border-0 text-center">
-            <h5 className="modal-title w-100">Editar gasto</h5>
+    <div className=  "modal-overlay">
+      <div className="modal-contenido">
+        <button className="cerrar-modal" onClick={onClose}>&times;</button>
+        <h2>Editar Gasto</h2>
+        <form className="row g-3">
+          <div className="col-md-6">
+            <label className="form-label">Fecha</label>
+            <input type="date" name="date" className="form-control" value={dato.date} onChange={cambio} />
           </div>
-          <div className="modal-body">
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className="mb-3">
-                <label className="fw-bold">Fecha</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
-                />
-              </div>
-              <div className="mb-3">
-                <label className="fw-bold">Categoría</label>
-                <select
-                  className="form-select"
-                  value={categoriaId}
-                  onChange={(e) => setCategoriaId(Number(e.target.value))}
-                >
-                  {categorias.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="form-check form-switch mb-3">
-                <label className="form-check-label fw-bold">Recurrente</label>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  checked={recurrente}
-                  onChange={(e) => setRecurrente(e.target.checked)}
-                />
-              </div>
-              <div className="mb-3">
-                <label className="fw-bold">Monto</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={monto}
-                  onChange={(e) =>
-                    setMonto(e.target.value === "" ? "" : Number(e.target.value))
-                  }
-                />
-              </div>
-              <div className="mb-3">
-                <label className="fw-bold">Descripción</label>
-                <textarea
-                  className="form-control"
-                  rows={3}
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                />
-              </div>
-            </form>
+
+          <div className="col-md-6">
+            <label className="form-label">Monto</label>
+            <input type="number" name="amount" className="form-control" value={dato.amount} onChange={cambio} />
           </div>
-          <div className="modal-footer border-0 d-flex justify-content-between">
-            <button type="button" className="btn btn-secondary" onClick={handleClose}>
-              Cancelar
-            </button>
-            <button type="button" className="btn btn-primary" onClick={handleAceptar}>
-              Aceptar
-            </button>
+
+          <div className="col-md-6">
+            <label className="form-label">Categoría</label>
+            <select name="category_id" className="form-select" value={dato.category_id} onChange={cambio}>
+              <option value="1">Servicios</option>
+              <option value="2">Alimentación</option>
+              <option value="3">Ocio</option>
+              <option value="4">Comida</option>
+              <option value="5">Transporte</option>
+              <option value="6">Salud</option>
+              <option value="7">Entretenimiento</option>
+              <option value="8">Estudios</option>
+              <option value="9">Regalos</option>
+            </select>
           </div>
-        </div>
+
+          <div className="col-md-6 d-flex align-items-center">
+            <label className="form-label me-2 mb-0">Recurrente</label>
+            <div className="form-check form-switch">
+              <input className="form-check-input" type="checkbox" name="recurring" checked={dato.recurring} onChange={cambio} />
+            </div>
+          </div>
+
+          <div className="col-12">
+            <label className="form-label">Descripción</label>
+            <input type="text" name="description" className="form-control" value={dato.description} onChange={cambio} />
+          </div>
+          
+          <div className="col-12">
+            <button type="button" className="btn btn-primary" onClick={enviar}>Guardar</button>
+          </div>
+        </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditarGasto;
+export default EditarGasto

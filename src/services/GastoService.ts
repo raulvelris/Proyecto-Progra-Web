@@ -51,6 +51,23 @@ export async function actualizarGasto(g: GastoTipo): Promise<void> {
   });
 }
 
+//service para EditarGasto
+export async function editGasto(g: GastoTipo): Promise<void> {
+  const userStr = localStorage.getItem("user");
+  let token = "";
+  if (userStr) {
+    token = JSON.parse(userStr).token;
+  }
+  await fetch("http://localhost:5000/edit-expenses/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(g)
+  });
+}
+
 // 4) Eliminar gasto
 export async function eliminarGasto(id: number): Promise<void> {
   const userStr = localStorage.getItem("user");

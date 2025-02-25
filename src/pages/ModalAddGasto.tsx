@@ -57,7 +57,7 @@ const ModalAddGasto = (props: MAGProps) => {
     >
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content rounded-5 shadow overflow-hidden">
-        <div className="modal-body p-5 text-secondary-emphasis">
+          <div className="modal-body p-5 text-secondary-emphasis">
             <h3 className="text-center mb-4 fw-bold">Agregar gasto</h3>
             <form className="d-flex flex-column gap-3">
               <div className="d-flex align-items-center">
