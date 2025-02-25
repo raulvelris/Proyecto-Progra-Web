@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../tailwind.css';
 import { useNavigate } from 'react-router-dom';
+// import { addAccessLog } from './Login';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -22,10 +23,6 @@ const RegisterPage = () => {
     const passwordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
         // console.log(event.target.value);
-    }
-
-    const registerClick = () => {
-        navigate('/confirmation');
     }
 
     const registerHandler = async (register_user: string, register_email: string, register_pswd: string) => {
@@ -80,7 +77,9 @@ const RegisterPage = () => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }
+
+    
 
     return <div className="flex justify-center items-center h-screen bg-gray-200">
     <form className="flex flex-col items-center border-none rounded-xl bg-white p-10 pb-5">
@@ -94,6 +93,7 @@ const RegisterPage = () => {
         <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-4 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
             type="button" onClick={() => {
                 registerHandler(user, email, password);
+                // addAccessLog('Registro', true);
                 // registerClick();
                 // sendEmail();
             }}>Registrar</button>

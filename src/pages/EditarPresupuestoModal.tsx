@@ -1,15 +1,15 @@
 import React, { useState } from "react"
-import { actualizarPresupuesto } from "../services/PresupuestoService"
-import { PresupuestoTipo } from "../types/PresupuestoTipo"
+import { ListadoPresupuestoItem, Categoria } from "./Presupuestos"
 
 interface EditarPresupuestoModalProps {
-    presupuesto: PresupuestoTipo
+    presupuesto: ListadoPresupuestoItem
     closeModal: () => void
-    onSave: () => void
+    onSave: (presupuesto: ListadoPresupuestoItem) => void
+    categorias: Categoria[]
 }
 
-const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupuesto, closeModal, onSave }) => {
-    const [presupuestoData, setPresupuestoData] = useState<PresupuestoTipo>(presupuesto)
+const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupuesto, closeModal, onSave, categorias }) => {
+    const [presupuestoData, setPresupuestoData] = useState<ListadoPresupuestoItem>(presupuesto)
 
     function handleChange(p: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         const { name, value } = p.target
@@ -18,8 +18,7 @@ const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupu
 
     function handleSubmit(p: React.FormEvent) {
         p.preventDefault()
-        actualizarPresupuesto(presupuestoData)
-        onSave()
+        onSave(presupuestoData)
         closeModal()
     }
 
@@ -37,22 +36,22 @@ const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupu
                   <div className="mb-3">
                     <label className="form-label">Categoría</label>
                     <select 
-                       value={presupuestoData.categoria} 
+                       value={presupuestoData.category_id} 
                      className="form-select" 
-                      name="categoria" 
+                      name="category_id" 
                       onChange={handleChange}>
-                      <option value="Ocio">Ocio</option>
-                      <option value="Servicios">Servicios</option>
-                      <option value="Alimentación">Alimentación</option>
+                      {categorias.map(categoria => (
+                          <option key={categoria.id} value={categoria.id}>{categoria.nombre}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="mb-3">
                     <label className="form-label">Monto</label>
                     <input
                       type="number"
-                      name="monto"
+                      name="monthly_budget"
                       className="form-control"
-                      value={presupuestoData.monto}
+                      value={presupuestoData.monthly_budget}
                       onChange={handleChange}
                     />
                   </div>

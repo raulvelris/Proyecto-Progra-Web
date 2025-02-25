@@ -112,10 +112,10 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
           <div className="col-12">
             <button type="button" className="btn btn-primary" onClick={enviar}>Guardar</button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default EditarGasto

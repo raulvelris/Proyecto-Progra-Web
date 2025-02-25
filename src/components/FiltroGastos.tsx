@@ -1,16 +1,17 @@
-import React from "react"
+// src/components/FiltroGastos.tsx
+import React from "react";
 
 interface Props {
-  filtroCategoria: string
-  setFiltroCategoria: (v: string) => void
-  filtroFecha: string
-  setFiltroFecha: (v: string) => void
-  minMonto: number | null
-  setMinMonto: (v: number | null) => void
-  maxMonto: number | null
-  setMaxMonto: (v: number | null) => void
-  filtroRec: string
-  setFiltroRec: (v: string) => void
+  filtroCategoria: string;
+  setFiltroCategoria: (v: string) => void;
+  filtroFecha: string;
+  setFiltroFecha: (v: string) => void;
+  minMonto: number | null;
+  setMinMonto: (v: number | null) => void;
+  maxMonto: number | null;
+  setMaxMonto: (v: number | null) => void;
+  filtroRec: string;
+  setFiltroRec: (v: string) => void;
 }
 
 function FiltroGastos({
@@ -55,15 +56,15 @@ function FiltroGastos({
           onChange={e => setFiltroCategoria(e.target.value)}
         >
           <option value="">Todas</option>
-          <option value="Alimentación">Alimentación</option>
+          <option value="Alimentacion">Alimentación</option>
           <option value="Servicios">Servicios</option>
           <option value="Ocio">Ocio</option>
           <option value="Comida">Comida</option>
           <option value="Transporte">Transporte</option>
           <option value="Salud">Salud</option>
           <option value="Entretenimiento">Entretenimiento</option>
-          <option value="Estudio">Estudio</option>
-          <option value="Regalo">Regalo</option>
+          <option value="Estudios">Estudios</option>
+          <option value="Regalos">Regalos</option>
         </select>
       </div>
       <div className="col-auto">

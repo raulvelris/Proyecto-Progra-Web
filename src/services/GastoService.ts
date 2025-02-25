@@ -1,42 +1,67 @@
-import { GastoTipo } from "../types/GastoTipo"
+// src/services/GastoService.ts
+import { GastoTipo } from "../types/GastoTipo";
 
-let lista: GastoTipo[] = [
-  {
-    id: 1,
-    fecha: "2025-01-10",
-    monto: 500,
-    categoria: "Alimentación",
-    descripcion: "Compra supermercado",
-    recurrente: false
-  },
-  {
-    id: 2,
-    fecha: "2025-01-15",
-    monto: 2000,
-    categoria: "Servicios",
-    descripcion: "Pago de luz",
-    recurrente: true
+const API_URL = "http://localhost:5000/expenses"; // Ajusta tu puerto/URL
+
+// 1) Obtener todos los gastos
+export async function obtenerGastos(): Promise<GastoTipo[]> {
+  const userStr = localStorage.getItem("user");
+  let token = "";
+  if (userStr) {
+    token = JSON.parse(userStr).token;
   }
-]
-
-export function obtenerGastos(): GastoTipo[] {
-  return lista
+  const resp = await fetch(API_URL, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  const data = await resp.json();
+  return data.gastos || [];
 }
 
-export function obtenerGastoPorId(id: number): GastoTipo | undefined {
-  return lista.find(x => x.id === id)
+// 2) Crear gasto
+export async function crearGasto(nuevo: Partial<GastoTipo>): Promise<void> {
+  const userStr = localStorage.getItem("user");
+  let token = "";
+  if (userStr) {
+    token = JSON.parse(userStr).token;
+  }
+  await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(nuevo)
+  });
 }
 
-export function actualizarGasto(g: GastoTipo): void {
-  lista = lista.map(e => e.id === g.id ? g : e)
+// 3) Actualizar gasto
+export async function actualizarGasto(g: GastoTipo): Promise<void> {
+  const userStr = localStorage.getItem("user");
+  let token = "";
+  if (userStr) {
+    token = JSON.parse(userStr).token;
+  }
+  await fetch(`${API_URL}/${g.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(g)
+  });
 }
 
-export function crearGasto(nuevo: GastoTipo): void {
-  const nuevoId = lista.length > 0 ? Math.max(...lista.map(e => e.id)) + 1 : 1
-  nuevo.id = nuevoId
-  lista.push(nuevo)
-}
-
-export function eliminarGasto(id: number): void {
-  lista = lista.filter(x => x.id !== id)
+// 4) Eliminar gasto
+export async function eliminarGasto(id: number): Promise<void> {
+  const userStr = localStorage.getItem("user");
+  let token = "";
+  if (userStr) {
+    token = JSON.parse(userStr).token;
+  }
+  await fetch(`${API_URL}/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 }
