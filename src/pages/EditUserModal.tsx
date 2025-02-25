@@ -13,7 +13,7 @@ const EditUserModal = (props : EditUserModalProps) => {
     const [userData, setUserData] = useState({
         name: props.user.name,
         email: props.user.email,
-        password_hash: props.user.password_hash,
+        password_hash: "",
         role_id: props.user.role_id
     })
 
@@ -64,6 +64,7 @@ const EditUserModal = (props : EditUserModalProps) => {
                                     className="form-control"
                                     style={{ width: "200px" }}
                                     value={userData.password_hash}
+                                    placeholder="New pass (opcional)"
                                     onChange={handleChange}
                                 />
                             </div>
@@ -95,11 +96,16 @@ const EditUserModal = (props : EditUserModalProps) => {
                         <div className="modal-footer justify-content-center border-0">
                             <button type="button" className="btn btn-secondary mx-3" onClick={ () => props.closeModal()}>Cancelar</button>
                             <button type="button" className="btn btn-primary mx-3" onClick={ () => {
-                                if (userData.name === "" || userData.email === "" || userData.password_hash === "" || userData.role_id === 0) {
+                                /* agrego number */
+                                if (userData.name === "" || userData.email === "" /*|| userData.password_hash === ""*/ || userData.role_id === 0) {
                                     setHayError(true)
                                 } else {
                                     setHayError(false)
-                                    props.onSave(userData)
+                                    const userToSave = {...userData} 
+                                    if (userToSave.password_hash === "") {
+                                        delete (userToSave as any).password_hash
+                                      }
+                                    props.onSave(userToSave)
                                 }
                                 
                             } }>Aceptar</button>

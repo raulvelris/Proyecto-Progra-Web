@@ -198,7 +198,7 @@ const ListUsers = () => {
                             <th className="text-start">Id</th>
                             <th className="text-start">Nombre</th>
                             <th className="text-start">Correo</th>
-                            <th className="text-start">Password</th>
+                            {/* <th className="text-start">Password</th> */}
                             <th className="text-start">Rol</th>
                             <th className="text-center">Accion</th>
                         </tr>
@@ -209,7 +209,7 @@ const ListUsers = () => {
                                 <td className="text-start">{String(user.id).padStart(3, '0')}</td>
                                 <td className="text-start">{user.name}</td>
                                 <td className="text-start">{user.email}</td>
-                                <td className="text-start">{user.password_hash}</td>
+                                {/*<td className="text-start">{user.password_hash}</td>*/}
                                 <td>
                                     {
                                         user.Role != null
