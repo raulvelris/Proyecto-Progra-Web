@@ -8,6 +8,7 @@ import ModalAddGasto from "./ModalAddGasto";
 import EliminarGasto from "./EliminarGasto";
 import { obtenerCategorias, CategoriaTipo } from "../services/CategoryService";
 import EditarGasto from "./EditarGasto";
+import { addAccessLog } from "./Login";
 
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([]);
@@ -246,6 +247,7 @@ function Gastos() {
           closeModal={() => setIsAddModalOpen(false)}
           onAddGasto={async (fecha, categoria, recurrente, monto, descripcion) => {
             addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
+            addAccessLog("Agregar Gasto");
           }}
           categorias={categorias}
         />
