@@ -216,17 +216,15 @@ function Gastos() {
 
       {/* Editar */}
       {isEditModalOpen && selectedGasto && (
-        <EditarGasto
-          showModal={isEditModalOpen}
-          closeModal={() => setIsEditModalOpen(false)}
-          onUpdate={() => {
-            cargarGastos();
-            setIsEditModalOpen(false);
-          }}
-          gasto={selectedGasto}
-          categorias={categorias}
-        />
-      )}
+  <EditarGasto
+    id={selectedGasto.id} // Enviar solo el ID
+    onClose={() => setIsEditModalOpen(false)}
+    onUpdate={() => {
+      cargarGastos();
+      setIsEditModalOpen(false);
+    }}
+  />
+)}
 
       {/* Eliminar */}
       {isDeleteModalOpen && selectedGasto && (
