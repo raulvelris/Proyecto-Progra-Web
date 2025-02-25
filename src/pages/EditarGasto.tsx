@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { obtenerGastos, actualizarGasto } from "../services/GastoService"
+import { obtenerGastos, editGasto } from "../services/GastoService"
 import { GastoTipo } from "../types/GastoTipo";
 
 
@@ -8,9 +8,10 @@ interface Props {
   id: number | null
   onClose: () => void
   onUpdate: () => void
+
 }
 
-function EditarGasto({ id, onClose, onUpdate }: Props) {
+const EditarGasto = ({ id, onClose, onUpdate}: Props) => {
   const [dato, setDato] = useState<GastoTipo | null>(null)
 
   useEffect(() => {
@@ -37,15 +38,15 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
   function cambio(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     if (!dato) return
     let val: string | number | boolean = e.target.value
-    if (e.target.name === "monto") val = parseFloat(val as string) || 0
-    if (e.target.name === "recurrente") val = (e.target as HTMLInputElement).checked
+    if (e.target.name === "amount") val = parseFloat(val as string) || 0
+    if (e.target.name === "recurring") val = (e.target as HTMLInputElement).checked
     setDato({ ...dato, [e.target.name]: val })
   }
 
   async function enviar() {
     if (!dato) return
     try {
-      await actualizarGasto(dato)
+      await editGasto(dato)
       onUpdate()
       onClose()
     } catch (error) {
@@ -56,46 +57,46 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
   if (!id || !dato) return null
 
   return (
-    <div className="modal-overlay">
+    <div className=  "modal-overlay">
       <div className="modal-contenido">
         <button className="cerrar-modal" onClick={onClose}>&times;</button>
         <h2>Editar Gasto</h2>
         <form className="row g-3">
           <div className="col-md-6">
             <label className="form-label">Fecha</label>
-            <input type="date" name="fecha" className="form-control" value={dato.date} onChange={cambio} />
+            <input type="date" name="date" className="form-control" value={dato.date} onChange={cambio} />
           </div>
 
           <div className="col-md-6">
             <label className="form-label">Monto</label>
-            <input type="number" name="monto" className="form-control" value={dato.amount} onChange={cambio} />
+            <input type="number" name="amount" className="form-control" value={dato.amount} onChange={cambio} />
           </div>
 
           <div className="col-md-6">
             <label className="form-label">Categoría</label>
-            <select name="categoria" className="form-select" value={dato.category_id} onChange={cambio}>
-              <option value="Servicios">1</option>
-              <option value="Alimentación">Alimentación</option>
-              <option value="Ocio">Ocio</option>
-              <option value="Comida">Comida</option>
-              <option value="Transporte">Transporte</option>
-              <option value="Salud">Salud</option>
-              <option value="Entretenimiento">Entretenimiento</option>
-              <option value="Estudios">Estudios</option>
-              <option value="Regalos">Regalos</option>
+            <select name="category_id" className="form-select" value={dato.category_id} onChange={cambio}>
+              <option value="1">Servicios</option>
+              <option value="2">Alimentación</option>
+              <option value="3">Ocio</option>
+              <option value="4">Comida</option>
+              <option value="5">Transporte</option>
+              <option value="6">Salud</option>
+              <option value="7">Entretenimiento</option>
+              <option value="8">Estudios</option>
+              <option value="9">Regalos</option>
             </select>
           </div>
 
           <div className="col-md-6 d-flex align-items-center">
             <label className="form-label me-2 mb-0">Recurrente</label>
             <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" name="recurrente" checked={dato.recurring} onChange={cambio} />
+              <input className="form-check-input" type="checkbox" name="recurring" checked={dato.recurring} onChange={cambio} />
             </div>
           </div>
 
           <div className="col-12">
             <label className="form-label">Descripción</label>
-            <input type="text" name="descripcion" className="form-control" value={dato.description} onChange={cambio} />
+            <input type="text" name="description" className="form-control" value={dato.description} onChange={cambio} />
           </div>
           
           <div className="col-12">
