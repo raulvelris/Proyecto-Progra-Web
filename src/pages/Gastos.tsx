@@ -1,4 +1,3 @@
-// src/pages/Gastos.tsx
 import { useEffect, useState, useMemo } from "react";
 import { obtenerGastos } from "../services/GastoService";
 import { GastoTipo } from "../types/GastoTipo";
