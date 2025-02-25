@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../tailwind.css';
 import { useNavigate } from 'react-router-dom';
+// import { addAccessLog } from './Login';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -24,13 +25,9 @@ const RegisterPage = () => {
         // console.log(event.target.value);
     }
 
-    const registerClick = () => {
-        navigate('/confirmation');
-    }
-
     const registerHandler = async (register_user: string, register_email: string, register_pswd: string) => {
         const userData = {
-            user: register_user,
+            name: register_user,
             email: register_email,
             password: register_pswd
         }
@@ -46,14 +43,25 @@ const RegisterPage = () => {
         const data = await resp.json();
         if (data.msg == "") {
             navigate('/confirmation');
+            console.log(data.usuario);
         } else {
             console.log(data.msg);
         }
     }
 
     const sendEmail = async () => {
+        const mainpage = 'http://localhost:5173/app/dashboard';
+
+        const text = `
+            <p>Hello,</p>
+            <p>Thank you for registering! Click the link below to access to the main page:</p>
+            <a href="${mainpage}" target="_blank">Go to Main Page</a>
+            <p>If the link doesn't work, copy and paste this URL into your browser:</p>
+            <p>${mainpage}</p>
+        `;
+
         try {
-            const response = await fetch('http://localhost:3001/send-email', {
+            const response = await fetch('http://localhost:5000/register/send-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -61,7 +69,7 @@ const RegisterPage = () => {
                 body: JSON.stringify({
                     to: email,
                     subject: 'Test',
-                    html: '<p>Este es un correo de prueba enviado desde Resend.</p>',
+                    html: text,
                 }),
             });
             const data = await response.json();
@@ -69,7 +77,9 @@ const RegisterPage = () => {
         } catch (error) {
             console.error(error);
         }
-    };
+    }
+
+    
 
     return <div className="flex justify-center items-center h-screen bg-gray-200">
     <form className="flex flex-col items-center border-none rounded-xl bg-white p-10 pb-5">
@@ -82,7 +92,9 @@ const RegisterPage = () => {
             placeholder="Contraseña" value={password} onChange={passwordChange}/>
         <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-4 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
             type="button" onClick={() => {
-                registerClick();
+                registerHandler(user, email, password);
+                // addAccessLog('Registro', true);
+                // registerClick();
                 // sendEmail();
             }}>Registrar</button>
     </form>

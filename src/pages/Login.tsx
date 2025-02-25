@@ -3,6 +3,36 @@ import { useNavigate } from 'react-router-dom';
 import '../tailwind.css';
 import ModalLoginError from './ModalLoginError';
 
+export const addAccessLog = async (actionText: string, firstAcc: boolean = false) => {
+    const ALInfo = {
+        action: actionText,
+        firstaccess: firstAcc
+    }
+
+    const user = localStorage.getItem('user');
+    let token = '';
+    if (user) {
+      const userInfo = JSON.parse(user);
+      token = userInfo.token;
+    }
+
+    const resp = await fetch('http://localhost:5000/accesslogs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(ALInfo)
+    });
+    
+    const data = await resp.json();
+
+    if (data.msg == "") {
+      console.log(data.al);
+    } else {
+      console.log("Error al agregar access log");
+    }
+}
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -29,15 +59,6 @@ const Login: React.FC = () => {
     navigate('/registrarse');
   };
 
-  const handleLogin = () => {
-    console.log(email, password);
-    if (email === "admin@" && password === "admin") {
-      navigate('/appadmin/dashboard');
-    } else {
-      navigate('/app/dashboard');
-    }
-  };
-
   const loginHandler = async (login_email: string, login_pswd: string) => {
     const userData = {
       email: login_email,
@@ -51,13 +72,16 @@ const Login: React.FC = () => {
       },
       body: JSON.stringify(userData)
     });
-
+    
     const data = await resp.json();
+    const token = data.body;
+
     if (data.msg == "") {
-      const userJSON = JSON.stringify(userData);
-      console.log(userJSON);
-      sessionStorage.setItem('user', userJSON);
-      navigate('/app/dashboard');
+      console.log(data.body);
+      setEmail('');
+      setPassword('');
+      localStorage.setItem('user', JSON.stringify(token));
+      token.role_id === 1 ? navigate('/appadmin/dashboard') : navigate('/app/dashboard');
     } else {
       setShowModal(true);
     }
@@ -65,9 +89,9 @@ const Login: React.FC = () => {
 
   // Verificar si el usuario ya está autenticado al cargar el componente
   useEffect(() => {
-    const userJSON = sessionStorage.getItem("user");
-    if (userJSON) {
-        navigate('app/dashboard'); // Redirigir si ya está autenticado
+    const loggedUser = localStorage.getItem("user");
+    if (loggedUser) {
+      navigate('app/dashboard'); // Redirigir si ya está autenticado
     }
   }, [navigate]);
 
@@ -83,7 +107,11 @@ const Login: React.FC = () => {
           <a className="text-blue-400 underline mb-4 cursor-pointer" 
             onClick={handleForgotPassword}>¿Olvidaste tu contraseña?</a>
           <button className="bg-blue-500 text-white px-4 py-2 rounded w-84 mt-2 hover:bg-blue-600 active:bg-blue-700 cursor-pointer transition duration-200" 
-            type="button" onClick={handleLogin}>Ingresar</button>
+            type="button" onClick={async () => {
+              // handleLogin();
+              await loginHandler(email, password);
+              addAccessLog("Login", true);
+            }}>Ingresar</button>
           <p className="text-gray-500 p-1">O</p>
           <button className="bg-gray-500 text-white px-4 py-2 rounded w-84 hover:bg-gray-600 active:bg-gray-700 cursor-pointer transition duration-200" 
             type="button" onClick={handleRegister}>Registrarse</button>

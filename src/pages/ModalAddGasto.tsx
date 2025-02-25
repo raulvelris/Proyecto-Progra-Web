@@ -1,48 +1,52 @@
 import { useState } from "react"
-import { crearGasto } from "../services/GastoService"
-import { GastoTipo } from "../types/GastoTipo"
+
+export interface Categoria {
+  id: number
+  name: string
+}
 
 interface MAGProps {
   showModal: boolean
   closeModal: () => void
   onAddGasto: (fecha: string, categoria: number, recurrente: boolean, monto: number, descripcion: string) => void
+  categorias: Categoria[]
 }
 
 const ModalAddGasto = (props: MAGProps) => {
-  const [fecha, setFecha] = useState("")
-  const [categoria, setCategoria] = useState<number>(0)
-  const [recurrente, setRecurrente] = useState(false)
-  const [monto, setMonto] = useState<number | "">("")
-  const [descripcion, setDescripcion] = useState("")
+  const [fecha, setFecha] = useState("");
+  const [categoria, setCategoria] = useState<number>(1);
+  const [recurrente, setRecurrente] = useState(false);
+  const [monto, setMonto] = useState<number | "">("");
+  const [descripcion, setDescripcion] = useState("");
 
   const fechaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFecha(e.target.value)
+    setFecha(e.target.value);
   }
 
   const categoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategoria(Number(e.target.value))
+    setCategoria(Number(e.target.value));
   }
 
   const recurrenteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRecurrente(e.target.checked)
+    setRecurrente(e.target.checked);
   }
 
   const montoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value
-    setMonto(val === "" ? "" : Number(val))
+    const val = e.target.value;
+    setMonto(val === "" ? "" : Number(val));
   }
 
   const descripcionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescripcion(e.target.value)
+    setDescripcion(e.target.value);
   }
 
   const aceptarClick = () => {
-    setFecha("")
-    setCategoria(0)
-    setRecurrente(false)
-    setMonto("")
-    setDescripcion("")
-    props.closeModal()
+    setFecha("");
+    setCategoria(0);
+    setRecurrente(false);
+    setMonto("");
+    setDescripcion("");
+    props.closeModal();
   }
 
   return (
@@ -72,15 +76,11 @@ const ModalAddGasto = (props: MAGProps) => {
                   value={categoria}
                   onChange={categoriaChange}
                 >
-                  <option value={0}>Servicios</option>
-                  <option value={1}>Alimentación</option>
-                  <option value={2}>Ocio</option>
-                  <option value={3}>Comida</option>
-                  <option value={4}>Transporte</option>
-                  <option value={5}>Salud</option>
-                  <option value={6}>Entretenimiento</option>
-                  <option value={7}>Estudio</option>
-                  <option value={8}>Regalo</option>
+                  {
+                    props.categorias.map((c: Categoria) => {
+                      return <option key={c.id} value={c.id}>{c.name}</option>
+                    })
+                  }
                 </select>
               </div>
               <div className="d-flex align-items-center">
@@ -117,12 +117,12 @@ const ModalAddGasto = (props: MAGProps) => {
                   type="button"
                   className="btn btn-secondary px-4 fw-semibold"
                   onClick={() => {
-                    props.closeModal()
-                    setFecha("")
-                    setCategoria(0)
-                    setRecurrente(false)
-                    setMonto("")
-                    setDescripcion("")
+                    setFecha("");
+                    setCategoria(0);
+                    setRecurrente(false);
+                    setMonto("");
+                    setDescripcion("");
+                    props.closeModal();
                   }}
                 >
                   Cancelar
