@@ -4,23 +4,29 @@ import { eliminarGasto } from "../services/GastoService";
 
 interface EliminarGastoProp {
   closeModal: () => void;
-  onDelete: () => void; // para recargar
+  onDelete: () => void;
   gastoId?: number;
 }
 
-const EliminarGasto: React.FC<EliminarGastoProp> = ({ closeModal, onDelete, gastoId }) => {
+const EliminarGasto: React.FC<EliminarGastoProp> = ({
+  closeModal,
+  onDelete,
+  gastoId
+}) => {
   async function handleDelete() {
     if (gastoId) {
       await eliminarGasto(gastoId);
-      onDelete();
+      onDelete(); // recarga la lista
     }
     closeModal();
   }
 
   return (
-    <div className="modal fade show d-flex align-items-center justify-content-center"
+    <div
+      className="modal fade show d-flex align-items-center justify-content-center"
       style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
-      aria-modal="true" role="dialog"
+      aria-modal="true"
+      role="dialog"
     >
       <div className="modal-dialog" style={{ maxWidth: "450px", width: "100%" }}>
         <div className="modal-content">

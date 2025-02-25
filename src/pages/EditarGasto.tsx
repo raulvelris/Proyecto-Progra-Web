@@ -37,7 +37,7 @@ const EditarGasto: React.FC<EditarGastoProps> = ({ showModal, closeModal, onUpda
       category_id: categoriaId,
       recurring: recurrente,
       amount: monto === "" ? 0 : Number(monto),
-      description
+      description: descripcion,
     };
     await actualizarGasto(updated);
     onUpdate();
@@ -126,5 +126,3 @@ const EditarGasto: React.FC<EditarGastoProps> = ({ showModal, closeModal, onUpda
 };
 
 export default EditarGasto;
-
-

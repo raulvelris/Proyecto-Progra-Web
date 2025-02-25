@@ -1,31 +1,36 @@
-import React, { useState } from "react"
-import { createUser } from "../services/userService"
-import { User } from "../types/User"
+import { useState } from "react"
+
+export interface Role {
+    id: number
+    name: string
+}
+
+export interface User {
+    name: string
+    email: string
+    password_hash: string
+    role_id: number
+}
 
 interface AddUserModalProps {
     closeModal: () => void
-    onSave: () => void
+    roles: Role[] 
+    onSave: (user : User) => void
 }
 
-const AddUserModal: React.FC<AddUserModalProps> = ({ closeModal, onSave }) => {
+const AddUserModal = (props : AddUserModalProps) => {
     const [userData, setUserData] = useState<User>({
-        id: 0,
         name: "",
         email: "",
-        password: "",
-        role: "User"
+        password_hash: "",
+        role_id: 0
     })
 
-    function handleChange(u: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+    const [hayError, setHayError] = useState<boolean>(false)
+
+    const handleChange = (u: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = u.target
         setUserData(prev => ({ ...prev, [name]: value }))
-    }
-
-    function handleSubmit(u: React.FormEvent) {
-        u.preventDefault()
-        createUser(userData)
-        onSave()
-        closeModal()
     }
 
     return (
@@ -36,7 +41,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ closeModal, onSave }) => {
                     <div className="modal-header d-flex justify-content-center w-100 border-0">
                         <h4 className="modal-title">Agregar Usuario</h4>
                     </div>
-                    <form onSubmit={handleSubmit}>
+                    <form>
                         <div className="modal-body">
                             <div className="mb-3 d-flex align-items-center">
                                 <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Nombre</strong></label>
@@ -64,30 +69,50 @@ const AddUserModal: React.FC<AddUserModalProps> = ({ closeModal, onSave }) => {
                                 <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Contraseña</strong></label>
                                 <input
                                     type="text"
-                                    name="password"
+                                    name="password_hash"
                                     className="form-control"
                                     style={{ width: "200px" }}
-                                    value={userData.password}
+                                    value={userData.password_hash}
                                     onChange={handleChange}
                                 />
                             </div>
                             <div className="mb-3 d-flex align-items-center">
                                 <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Rol usuario</strong></label>
                                 <select
-                                    name="role"
+                                    name="role_id"
                                     className="form-select"
                                     style={{ width: "200px" }}
-                                    value={userData.role}
+                                    value={userData.role_id}
                                     onChange={handleChange}
-                                >
-                                    <option value="User">User</option>
-                                    <option value="Admin">Admin</option>
+                                    >                                  
+                                    <option value={0}>----- Seleccionar -----</option>
+                                    {
+                                        props.roles.map((role : Role) => {
+                                            return <option key={String(role.id)} value={role.id}>
+                                                {role.name}
+                                            </option>
+                                        })
+                                    }
                                 </select>
                             </div>
+                            {
+                                hayError &&
+                                <div className="alert alert-danger" role="alert">
+                                    <strong>¡Error!</strong> Debe llenar todos los campos.
+                                </div>
+                            }
                         </div>
                         <div className="modal-footer justify-content-center border-0">
-                            <button type="button" className="btn btn-secondary mx-3" onClick={closeModal}>Cancelar</button>
-                            <button type="submit" className="btn btn-primary mx-3">Aceptar</button>
+                            <button type="button" className="btn btn-secondary mx-3" onClick={ () => props.closeModal() }>Cancelar</button>
+                            <button type="button" className="btn btn-primary mx-3" onClick={ () => {
+                                if (userData.name === "" || userData.email === "" || userData.password_hash === "" || userData.role_id === 0) {
+                                    setHayError(true)
+                                } else {
+                                    setHayError(false)
+                                    props.onSave(userData)
+                                }
+                                
+                            } }>Aceptar</button>
                         </div>
                     </form>
                 </div>

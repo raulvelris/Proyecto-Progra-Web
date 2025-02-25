@@ -3,11 +3,11 @@ import { useEffect, useState, useMemo } from "react";
 import { obtenerGastos } from "../services/GastoService";
 import { GastoTipo } from "../types/GastoTipo";
 import FiltroGastos from "../components/FiltroGastos";
-import EditarGastoModal from "./EditarGasto";
 import ExportarGastoModal from "./ExportarGastoModal";
 import ModalAddGasto from "./ModalAddGasto";
 import EliminarGasto from "./EliminarGasto";
 import { obtenerCategorias, CategoriaTipo } from "../services/CategoryService";
+import EditarGasto from "./EditarGasto";
 
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([]);
@@ -91,6 +91,43 @@ function Gastos() {
 
   function handleAddClick() {
     setIsAddModalOpen(true);
+  }
+
+  const addGastoHandler = async (ng_fecha: string, ng_categoria: number, ng_recurrente: boolean, ng_monto: number, ng_descripcion: string) => {
+    const ng_date = new Date(ng_fecha);
+
+    const gastoData = {
+      date: ng_date,
+      amount: ng_monto,
+      description: ng_descripcion,
+      recurring: ng_recurrente,
+      category_id: ng_categoria
+    }
+
+    const user = localStorage.getItem('user');
+    let token = '';
+    if (user) {
+      const userInfo = JSON.parse(user);
+      token = userInfo.token;
+    }
+
+    const resp = await fetch('http://localhost:5000/add-gasto', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(gastoData)
+    });
+    
+    const data = await resp.json();
+
+    if (data.msg == "") {
+      console.log(data.gasto);
+      await cargarGastos();
+    } else {
+      console.log("Error al agregar gasto");
+    }
   }
 
   return (
@@ -207,9 +244,8 @@ function Gastos() {
         <ModalAddGasto
           showModal={isAddModalOpen}
           closeModal={() => setIsAddModalOpen(false)}
-          onAddGasto={() => {
-            cargarGastos();
-            setIsAddModalOpen(false);
+          onAddGasto={async (fecha, categoria, recurrente, monto, descripcion) => {
+            addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
           }}
           categorias={categorias}
         />
@@ -219,4 +255,3 @@ function Gastos() {
 }
 
 export default Gastos;
-

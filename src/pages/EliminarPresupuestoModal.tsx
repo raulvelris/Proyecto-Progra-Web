@@ -1,9 +1,25 @@
+import React from "react";
+import { eliminarPresupuesto } from "../services/PresupuestoService";
+
 interface EliminarPresupuestoModalProps {
-    closeModal: () => void
-    onDelete: () => void
+    closeModal: () => void;
+    onDelete: () => void;
+    presupuestoId?: number;
 }
 
-const EliminarPresupuestoModal: React.FC<EliminarPresupuestoModalProps> = ({ closeModal, onDelete }) => {
+const EliminarPresupuestoModal : React.FC<EliminarPresupuestoModalProps> = ({
+    closeModal,
+    onDelete,
+    presupuestoId
+}) => {
+    async function handleDelete() {
+        if (presupuestoId) {
+            await eliminarPresupuesto(presupuestoId);
+            onDelete();
+        }
+        closeModal();
+    }
+
     return (
         <div className="modal fade show d-flex align-items-center justify-content-center"
         style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }} aria-modal="true" role="dialog">
@@ -17,7 +33,7 @@ const EliminarPresupuestoModal: React.FC<EliminarPresupuestoModalProps> = ({ clo
                     </div>
                     <div className="modal-footer justify-content-center">
                         <button type="button" className="btn btn-secondary mx-3" onClick={closeModal}>Cancelar</button>
-                        <button type="button" className="btn btn-primary mx-3" onClick={onDelete}>Eliminar</button>
+                        <button type="button" className="btn btn-primary mx-3" onClick={handleDelete}>Eliminar</button>
                     </div>
                 </div>
             </div>
