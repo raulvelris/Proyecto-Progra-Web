@@ -16,14 +16,6 @@ let lista: GastoTipo[] = [
     categoria: "Servicios",
     descripcion: "Pago de luz",
     recurrente: true
-  },
-  {
-    id: 3,
-    fecha: "2025-02-02",
-    monto: 800,
-    categoria: "Ocio",
-    descripcion: "Salida al cine",
-    recurrente: false
   }
 ]
 
