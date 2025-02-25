@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { obtenerGastoPorId } from "../services/GastoService"
+import { obtenerGastos, actualizarGasto } from "../services/GastoService"
+import { GastoTipo } from "../types/GastoTipo";
 
-interface GastoTipo {
-  id: number
-  fecha: string
-  monto: number
-  categoria: string
-  recurrente: boolean
-  descripcion: string
-}
+
 
 interface Props {
   id: number | null
@@ -24,7 +18,8 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
     
     const cargarDatos = async () => {
       try {
-        const enc = await obtenerGastoPorId(id)
+        const gastos = await obtenerGastos()
+        const enc = gastos.find(gasto => gasto.id === id)
         if (!enc) {
           onClose()
           return
@@ -50,13 +45,7 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
   async function enviar() {
     if (!dato) return
     try {
-      await fetch("http://localhost:5000/edit-expenses/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(dato)
-      })
+      await actualizarGasto(dato)
       onUpdate()
       onClose()
     } catch (error) {
@@ -74,18 +63,18 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
         <form className="row g-3">
           <div className="col-md-6">
             <label className="form-label">Fecha</label>
-            <input type="date" name="fecha" className="form-control" value={dato.fecha} onChange={cambio} />
+            <input type="date" name="fecha" className="form-control" value={dato.date} onChange={cambio} />
           </div>
 
           <div className="col-md-6">
             <label className="form-label">Monto</label>
-            <input type="number" name="monto" className="form-control" value={dato.monto} onChange={cambio} />
+            <input type="number" name="monto" className="form-control" value={dato.amount} onChange={cambio} />
           </div>
 
           <div className="col-md-6">
             <label className="form-label">Categoría</label>
-            <select name="categoria" className="form-select" value={dato.categoria} onChange={cambio}>
-              <option value="Servicios">Servicios</option>
+            <select name="categoria" className="form-select" value={dato.category_id} onChange={cambio}>
+              <option value="Servicios">1</option>
               <option value="Alimentación">Alimentación</option>
               <option value="Ocio">Ocio</option>
               <option value="Comida">Comida</option>
@@ -100,22 +89,22 @@ function EditarGasto({ id, onClose, onUpdate }: Props) {
           <div className="col-md-6 d-flex align-items-center">
             <label className="form-label me-2 mb-0">Recurrente</label>
             <div className="form-check form-switch">
-              <input className="form-check-input" type="checkbox" name="recurrente" checked={dato.recurrente} onChange={cambio} />
+              <input className="form-check-input" type="checkbox" name="recurrente" checked={dato.recurring} onChange={cambio} />
             </div>
           </div>
 
           <div className="col-12">
             <label className="form-label">Descripción</label>
-            <input type="text" name="descripcion" className="form-control" value={dato.descripcion} onChange={cambio} />
+            <input type="text" name="descripcion" className="form-control" value={dato.description} onChange={cambio} />
           </div>
           
           <div className="col-12">
             <button type="button" className="btn btn-primary" onClick={enviar}>Guardar</button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
 export default EditarGasto
