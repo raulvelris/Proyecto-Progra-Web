@@ -1,4 +1,3 @@
-// src/pages/Gastos.tsx
 import { useEffect, useState, useMemo } from "react";
 import { obtenerGastos } from "../services/GastoService";
 import { GastoTipo } from "../types/GastoTipo";
@@ -174,6 +173,7 @@ function Gastos() {
     ng_descripcion: string
   ) => {
     const ng_date = new Date(ng_fecha);
+
     const gastoData = {
       date: ng_date,
       amount: ng_monto,
@@ -183,10 +183,12 @@ function Gastos() {
     };
     const user = localStorage.getItem("user");
     let token = "";
+
     if (user) {
       const userInfo = JSON.parse(user);
       token = userInfo.token;
     }
+
     const resp = await fetch("http://localhost:5000/add-gasto", {
       method: "POST",
       headers: {
@@ -196,6 +198,7 @@ function Gastos() {
       body: JSON.stringify(gastoData)
     });
     const data = await resp.json();
+
     if (data.msg == "") {
       console.log(data.gasto);
       await cargarGastos();
@@ -336,5 +339,4 @@ function Gastos() {
     </div>
   );
 }
-
 export default Gastos;
