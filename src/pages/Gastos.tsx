@@ -10,6 +10,12 @@ import { obtenerCategorias, CategoriaTipo } from "../services/CategoryService";
 import EditarGasto from "./EditarGasto";
 import { addAccessLog } from "./Login";
 
+// Función para parsear fechas "YYYY-MM-DD" sin zona horaria
+function parseDateYMD(dateStr: string): Date {
+  const [y, m, d] = dateStr.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([]);
   const [categorias, setCategorias] = useState<CategoriaTipo[]>([]);
@@ -28,6 +34,10 @@ function Gastos() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
+  // Ordenamiento (tres estados: "none", "asc", "desc")
+  const [sortedColumn, setSortedColumn] = useState<string | null>(null);
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | "none">("none");
+
   useEffect(() => {
     cargarGastos();
     cargarCategorias();
@@ -36,7 +46,6 @@ function Gastos() {
   async function cargarGastos() {
     const gastosBD = await obtenerGastos();
     setLista(gastosBD);
-    // Opcional: Notificar al Dashboard que cambió algo
   }
 
   async function cargarCategorias() {
@@ -56,29 +65,91 @@ function Gastos() {
     return cat ? cat.id : null;
   }
 
-  // Filtrado local
+  // Función para manejar ordenamiento al hacer clic en un encabezado
+  function handleSort(col: string) {
+    if (sortedColumn !== col) {
+      setSortedColumn(col);
+      setSortDirection("asc");
+    } else {
+      if (sortDirection === "none") {
+        setSortDirection("asc");
+      } else if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortDirection("none");
+      }
+    }
+  }
+
+  // Función que compara dos gastos según la columna y la dirección
+  function compareGastos(a: GastoTipo, b: GastoTipo, col: string, dir: "asc" | "desc") {
+    let valA: any;
+    let valB: any;
+    switch (col) {
+      case "fecha":
+        valA = parseDateYMD(a.date).getTime();
+        valB = parseDateYMD(b.date).getTime();
+        break;
+      case "monto":
+        valA = a.amount;
+        valB = b.amount;
+        break;
+      case "descripcion":
+        valA = a.description.toLowerCase();
+        valB = b.description.toLowerCase();
+        break;
+      case "recurrente":
+        valA = a.recurring ? 1 : 0;
+        valB = b.recurring ? 1 : 0;
+        break;
+      case "categoria":
+        valA = getCategoryName(a.category_id).toLowerCase();
+        valB = getCategoryName(b.category_id).toLowerCase();
+        break;
+      default:
+        valA = 0;
+        valB = 0;
+    }
+    if (valA < valB) return dir === "asc" ? -1 : 1;
+    if (valA > valB) return dir === "asc" ? 1 : -1;
+    return 0;
+  }
+
+  // Icono de ordenamiento para mostrar en la cabecera
+  function renderSortIcon(col: string) {
+    if (sortedColumn !== col || sortDirection === "none") {
+      return "⇅";
+    }
+    if (sortDirection === "asc") return "▲";
+    if (sortDirection === "desc") return "▼";
+    return "⇅";
+  }
+
+  // Filtrado local y luego ordenamiento
   const datosFiltrados = useMemo(() => {
-    return lista.filter((g) => {
-      // 1) Filtro por nombre de categoría
+    let filtrados = lista.filter((g) => {
       let cOk = true;
       if (filtroCategoria) {
         const catId = getCategoryIdByName(filtroCategoria);
         cOk = catId != null && g.category_id === catId;
       }
-      // 2) Filtro fecha
       let fOk = !filtroFecha || g.date === filtroFecha;
-      // 3) Filtro rango
       let mOk = true;
       if (minMonto !== null && g.amount < minMonto) mOk = false;
       if (maxMonto !== null && g.amount > maxMonto) mOk = false;
-      // 4) Filtro recurrente
       let rOk = true;
       if (filtroRec === "si") rOk = g.recurring === true;
       if (filtroRec === "no") rOk = g.recurring === false;
-
       return cOk && fOk && mOk && rOk;
     });
-  }, [lista, filtroCategoria, filtroFecha, minMonto, maxMonto, filtroRec, categorias]);
+
+    if (sortedColumn && sortDirection !== "none") {
+      filtrados = [...filtrados].sort((a, b) =>
+        compareGastos(a, b, sortedColumn, sortDirection)
+      );
+    }
+    return filtrados;
+  }, [lista, filtroCategoria, filtroFecha, minMonto, maxMonto, filtroRec, sortedColumn, sortDirection, categorias]);
 
   function handleDeleteClick(g: GastoTipo) {
     setSelectedGasto(g);
@@ -94,42 +165,44 @@ function Gastos() {
     setIsAddModalOpen(true);
   }
 
-  const addGastoHandler = async (ng_fecha: string, ng_categoria: number, ng_recurrente: boolean, ng_monto: number, ng_descripcion: string) => {
+  // Función existente para agregar gasto (con addAccessLog)
+  const addGastoHandler = async (
+    ng_fecha: string,
+    ng_categoria: number,
+    ng_recurrente: boolean,
+    ng_monto: number,
+    ng_descripcion: string
+  ) => {
     const ng_date = new Date(ng_fecha);
-
     const gastoData = {
       date: ng_date,
       amount: ng_monto,
       description: ng_descripcion,
       recurring: ng_recurrente,
       category_id: ng_categoria
-    }
-
-    const user = localStorage.getItem('user');
-    let token = '';
+    };
+    const user = localStorage.getItem("user");
+    let token = "";
     if (user) {
       const userInfo = JSON.parse(user);
       token = userInfo.token;
     }
-
-    const resp = await fetch('http://localhost:5000/add-gasto', {
-      method: 'POST',
+    const resp = await fetch("http://localhost:5000/add-gasto", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(gastoData)
     });
-    
     const data = await resp.json();
-
     if (data.msg == "") {
       console.log(data.gasto);
       await cargarGastos();
     } else {
       console.log("Error al agregar gasto");
     }
-  }
+  };
 
   return (
     <div className="container mt-4">
@@ -163,11 +236,21 @@ function Gastos() {
       <table className="table table-bordered">
         <thead className="table-light">
           <tr>
-            <th>Fecha</th>
-            <th>Monto</th>
-            <th>Descripción</th>
-            <th>Recurrente</th>
-            <th>Categoría</th>
+            <th style={{ cursor: "pointer" }} onClick={() => handleSort("fecha")}>
+              Fecha {renderSortIcon("fecha")}
+            </th>
+            <th style={{ cursor: "pointer" }} onClick={() => handleSort("monto")}>
+              Monto {renderSortIcon("monto")}
+            </th>
+            <th style={{ cursor: "pointer" }} onClick={() => handleSort("descripcion")}>
+              Descripción {renderSortIcon("descripcion")}
+            </th>
+            <th style={{ cursor: "pointer" }} onClick={() => handleSort("recurrente")}>
+              Recurrente {renderSortIcon("recurrente")}
+            </th>
+            <th style={{ cursor: "pointer" }} onClick={() => handleSort("categoria")}>
+              Categoría {renderSortIcon("categoria")}
+            </th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -205,7 +288,7 @@ function Gastos() {
         </tbody>
       </table>
 
-      {/* Exportar */}
+      {/* Exportar Modal */}
       {isExportModalOpen && (
         <ExportarGastoModal
           closeModal={() => setIsExportModalOpen(false)}
@@ -214,7 +297,7 @@ function Gastos() {
         />
       )}
 
-      {/* Editar */}
+      {/* Editar Modal */}
       {isEditModalOpen && selectedGasto && (
   <EditarGasto
     id={selectedGasto.id} // Enviar solo el ID
@@ -226,7 +309,7 @@ function Gastos() {
   />
 )}
 
-      {/* Eliminar */}
+      {/* Eliminar Modal */}
       {isDeleteModalOpen && selectedGasto && (
         <EliminarGasto
           closeModal={() => setIsDeleteModalOpen(false)}
@@ -238,13 +321,13 @@ function Gastos() {
         />
       )}
 
-      {/* Agregar */}
+      {/* Agregar Modal */}
       {isAddModalOpen && (
         <ModalAddGasto
           showModal={isAddModalOpen}
           closeModal={() => setIsAddModalOpen(false)}
           onAddGasto={async (fecha, categoria, recurrente, monto, descripcion) => {
-            addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
+            await addGastoHandler(fecha, categoria, recurrente, monto, descripcion);
             addAccessLog("Agregar Gasto");
           }}
           categorias={categorias}
