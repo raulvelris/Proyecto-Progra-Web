@@ -45,7 +45,13 @@ const ListUsers = () => {
         })
         const data = await resp.json()
         if (data.msg == ""){
-            closeModal()
+            if (filterRole === 0) {
+                await httpGetUsers()
+            } else {
+                await httpFilterUsers(filterRole)
+            }
+        } else {
+            console.error(`Error al agregar usuario: ${data.msg}`)
         }
     }
 
@@ -80,7 +86,7 @@ const ListUsers = () => {
         })
         const data = await resp.json()
         if (data.msg == ""){
-            httpGetUsers()
+            httpGetUsers() 
         }else {
             console.error(`Error al eliminar usuario: ${data.msg}`)
         }
@@ -114,22 +120,24 @@ const ListUsers = () => {
         });
         const data = await resp.json()
         if (data.msg === "") {
-            await httpGetUsers()
+            if (filterRole === 0) {
+                await httpGetUsers()
+            } else {
+                await httpFilterUsers(filterRole)
+            }
         } else {
             console.error(`Error al actualizar el usuario: ${data.msg}`);
         }
     }
 
     const httpFilterUsers = async (id: number) => {
-        console.log(id)
-        const url = `${URL_BACKEND}/admin/users?role_id=${id}`
-        console.log("URL que se está llamando:", url)  // Verifica si la URL es correcta
+        const url = `${URL_BACKEND}/admin/users/filter?role_id=${id}`
         const resp = await fetch(url)
         const data = await resp.json()
         if  (data.msg === ""){
             const filteredUsers = data.usuarios
             setAllUsers(filteredUsers)
-        }else {
+        } else {
             console.error(`Error al obtener usuarios filtrados: ${data.msg}`)
         }
     }
@@ -235,8 +243,7 @@ const ListUsers = () => {
                     closeModal={closeModal}
                     onSave={ async (userToEdit : User) => {
                         await httpUpdateUser(selectedUserId, userToEdit)
-                        await httpGetUsers() // se sale ?
-                        closeModal() // revisar esto, el tema de si va antes o yo que se
+                        closeModal() 
                     }}
                 />
             )}
@@ -256,8 +263,7 @@ const ListUsers = () => {
                     filterRole={filterRole}
                     setFilterRole={setFilterRole}
                     onApplyFilter={ async (role_id : number) => {
-                        setFilterRole(role_id) // añadido
-                        // await httpFilterUsers(role_id)
+                        setFilterRole(role_id) 
                         closeModal()
                     }}
                 />
@@ -268,7 +274,7 @@ const ListUsers = () => {
                     closeModal={ closeModal }
                     onSave={ async (user : User) => {
                         await httpAddUser(user)
-                        await httpGetUsers() // se sale?
+                        closeModal() 
                     }}
                 />
             )}

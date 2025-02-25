@@ -17,6 +17,8 @@ const EditUserModal = (props : EditUserModalProps) => {
         role_id: props.user.role_id
     })
 
+    const [hayError, setHayError] = useState<boolean>(false)
+
     function handleChange(u: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
         const { name, value } = u.target
         setUserData( prev => ({...prev, [name]: value }))
@@ -74,7 +76,6 @@ const EditUserModal = (props : EditUserModalProps) => {
                                     value={userData.role_id}
                                     onChange={handleChange}
                                     >
-                                    <option value={0}>----- Seleccionar -----</option>
                                     {
                                         props.roles.map((role : Role) => {
                                             return <option key={String(role.id)} value={role.id}>
@@ -84,10 +85,24 @@ const EditUserModal = (props : EditUserModalProps) => {
                                     }
                                 </select>
                             </div>
+                            {
+                                hayError &&
+                                <div className="alert alert-danger" role="alert">
+                                    <strong>¡Error!</strong> Debe llenar todos los campos.
+                                </div>
+                            }
                         </div>
                         <div className="modal-footer justify-content-center border-0">
                             <button type="button" className="btn btn-secondary mx-3" onClick={ () => props.closeModal()}>Cancelar</button>
-                            <button type="submit" className="btn btn-primary mx-3" onClick={ () => props.onSave(userData)}>Aceptar</button>
+                            <button type="button" className="btn btn-primary mx-3" onClick={ () => {
+                                if (userData.name === "" || userData.email === "" || userData.password_hash === "" || userData.role_id === 0) {
+                                    setHayError(true)
+                                } else {
+                                    setHayError(false)
+                                    props.onSave(userData)
+                                }
+                                
+                            } }>Aceptar</button>
                         </div>
                     </form>
                 </div>
