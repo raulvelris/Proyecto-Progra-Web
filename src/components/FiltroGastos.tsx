@@ -56,15 +56,15 @@ function FiltroGastos({
           onChange={e => setFiltroCategoria(e.target.value)}
         >
           <option value="">Todas</option>
-          <option value="Alimentación">Alimentación</option>
+          <option value="Alimentacion">Alimentación</option>
           <option value="Servicios">Servicios</option>
           <option value="Ocio">Ocio</option>
           <option value="Comida">Comida</option>
           <option value="Transporte">Transporte</option>
           <option value="Salud">Salud</option>
           <option value="Entretenimiento">Entretenimiento</option>
-          <option value="Estudio">Estudio</option>
-          <option value="Regalo">Regalo</option>
+          <option value="Estudios">Estudios</option>
+          <option value="Regalos">Regalos</option>
         </select>
       </div>
       <div className="col-auto">
