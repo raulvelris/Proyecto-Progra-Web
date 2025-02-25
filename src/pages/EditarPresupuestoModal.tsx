@@ -1,70 +1,103 @@
-import React, { useState } from "react"
-import { ListadoPresupuestoItem, Categoria } from "./Presupuestos"
+import React, { useEffect, useState } from "react";
+import { PresupuestoTipo } from "../types/PresupuestoTipo";
+import { actualizarPresupuesto } from "../services/PresupuestoService";
+import { CategoriaTipo } from "../services/CategoryService";
+
 
 interface EditarPresupuestoModalProps {
-    presupuesto: ListadoPresupuestoItem
-    closeModal: () => void
-    onSave: (presupuesto: ListadoPresupuestoItem) => void
-    categorias: Categoria[]
+    showModal: boolean;
+    closeModal: () => void;
+    onUpdate: () => void;
+    presupuesto: PresupuestoTipo;
+    categorias: CategoriaTipo[];
 }
 
-const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ presupuesto, closeModal, onSave, categorias }) => {
-    const [presupuestoData, setPresupuestoData] = useState<ListadoPresupuestoItem>(presupuesto)
+const EditarPresupuestoModal: React.FC<EditarPresupuestoModalProps> = ({ showModal, closeModal, onUpdate, presupuesto, categorias }) => {
+    const [categoriaId, setCategoriaId] = useState(presupuesto.category_id);
+    const [monto, setMonto] = useState<number | "">(presupuesto.monthly_budget);
 
-    function handleChange(p: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
-        const { name, value } = p.target
-        setPresupuestoData(prev => ({ ...prev, [name]: value }))
+    useEffect(() => {
+        setCategoriaId(presupuesto.category_id);
+        setMonto(presupuesto.monthly_budget);
+    }, [presupuesto]);
+
+    if (!showModal) return null;
+
+    async function handleAceptar() {
+        const updated: PresupuestoTipo = {
+        ...presupuesto,
+        category_id: categoriaId,
+        monthly_budget: monto === "" ? 0 : Number(monto),
+    };
+        await actualizarPresupuesto(updated);
+        onUpdate();
+        handleClose();
     }
 
-    function handleSubmit(p: React.FormEvent) {
-        p.preventDefault()
-        onSave(presupuestoData)
-        closeModal()
+    function handleClose() {
+        closeModal();   
     }
-
+    
     return (
-        <div className="modal fade show d-flex align-items-center justify-content-center"
-             style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
-             aria-modal="true" role="dialog">
-          <div className="modal-dialog" style={{ maxWidth: "450px", width: "100%" }}>
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title mx-auto">Editar presupuesto</h5>
-              </div>
-              <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label className="form-label">Categoría</label>
-                    <select 
-                       value={presupuestoData.category_id} 
-                     className="form-select" 
-                      name="category_id" 
-                      onChange={handleChange}>
-                      {categorias.map(categoria => (
-                          <option key={categoria.id} value={categoria.id}>{categoria.nombre}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Monto</label>
-                    <input
-                      type="number"
-                      name="monthly_budget"
-                      className="form-control"
-                      value={presupuestoData.monthly_budget}
-                      onChange={handleChange}
-                    />
-                  </div>
+        <div
+            className="modal fade show d-flex align-items-center justify-content-center"
+            style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)", minHeight: "100vh" }}
+            aria-modal="true"
+            role="dialog"
+        >
+            <div className="modal-dialog" style={{ maxWidth: "450px", width: "100%" }}>
+                <div className="modal-content rounded-5">
+                    <div className="modal-header d-flex justify-content-center w-100 border-0">
+                        <h4 className="modal-title">Editar Presupuesto</h4>
+                    </div>
+                    <form>
+                        <div className="modal-body">
+                            <div className="mb-3 d-flex align-items-center">
+                                <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>
+                                    <strong>Categoria</strong>
+                                </label>
+                                <select
+                                    name="category_id"
+                                    className="form-select"
+                                    style={{ width: "200px" }}
+                                    value={categoriaId}
+                                    onChange={(e) => setCategoriaId(Number(e.target.value))}
+                                >
+                                    {categorias.map((cat) => (
+                                        <option key={cat.id} value={cat.id}>
+                                        {cat.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-3 d-flex align-items-center">
+                                <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}>
+                                    <strong>Monto</strong>
+                                </label>
+                                <input
+                                    type="number"
+                                    name="monthly_budget"
+                                    className="form-control"
+                                    style={{ width: "200px" }}
+                                    value={monto}
+                                    onChange={(e) =>
+                                    setMonto(e.target.value === "" ? "" : Number(e.target.value))}
+                                />
+                            </div>
+                        </div>
+                        <div className="modal-footer justify-content-center border-0">
+                            <button type="button" className="btn btn-secondary" onClick={handleClose}>
+                            Cancelar
+                            </button>
+                            <button type="button" className="btn btn-primary" onClick={handleAceptar}>
+                            Aceptar
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div className="modal-footer d-flex justify-content-center">
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancelar</button>
-                  <button type="submit" className="btn btn-primary">Aceptar</button>
-                </div>
-              </form>
             </div>
-          </div>
         </div>
-      );
-}
+    );
+};
 
-export default EditarPresupuestoModal
+export default EditarPresupuestoModal;

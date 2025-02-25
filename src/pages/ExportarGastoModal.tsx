@@ -1,4 +1,3 @@
-// src/pages/ExportarGastoModal.tsx
 import React, { useState } from "react";
 import { GastoTipo } from "../types/GastoTipo";
 import { exportarCSV, exportarPDF } from "../services/ExportarService";
@@ -16,11 +15,11 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({
 }) => {
   const [selectedFormat, setSelectedFormat] = useState<"csv" | "pdf">("csv");
 
-  function handleExport() {
+  const handleExport = async () => {
     if (selectedFormat === "csv") {
       exportarCSV(data);
     } else {
-      exportarPDF(data);
+      await exportarPDF(data);
     }
     onExport(selectedFormat);
   }
@@ -93,4 +92,3 @@ const ExportarGastoModal: React.FC<ExportarGastoModalProps> = ({
 };
 
 export default ExportarGastoModal;
-

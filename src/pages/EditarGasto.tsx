@@ -35,6 +35,20 @@ const EditarGasto = ({ id, onClose, onUpdate}: Props) => {
     cargarDatos()
   }, [id, onClose])
 
+  async function handleAceptar() {
+    const updated: GastoTipo = {
+      ...gasto,
+      date: fecha,
+      category_id: categoriaId,
+      recurring: recurrente,
+      amount: monto === "" ? 0 : Number(monto),
+      description: descripcion,
+    };
+    await actualizarGasto(updated);
+    onUpdate();
+    handleClose();
+  }
+        
   function cambio(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     if (!dato) return
     let val: string | number | boolean = e.target.value
