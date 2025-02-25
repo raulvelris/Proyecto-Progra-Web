@@ -8,17 +8,11 @@ interface EditarGastoProps {
   showModal: boolean;
   closeModal: () => void;
   onUpdate: () => void;
-  gasto: GastoTipo;           // El gasto a editar
-  categorias: CategoriaTipo[]; // Lista de categorías para el select
+  gasto: GastoTipo;            // Pasamos el gasto completo
+  categorias: CategoriaTipo[]; // Para mostrar en dropdown
 }
 
-const EditarGasto: React.FC<EditarGastoProps> = ({
-  showModal,
-  closeModal,
-  onUpdate,
-  gasto,
-  categorias
-}) => {
+const EditarGasto: React.FC<EditarGastoProps> = ({ showModal, closeModal, onUpdate, gasto, categorias }) => {
   const [fecha, setFecha] = useState(gasto.date);
   const [categoriaId, setCategoriaId] = useState(gasto.category_id);
   const [recurrente, setRecurrente] = useState(gasto.recurring);
@@ -26,6 +20,7 @@ const EditarGasto: React.FC<EditarGastoProps> = ({
   const [descripcion, setDescripcion] = useState(gasto.description);
 
   useEffect(() => {
+    // Cada vez que el modal se abra con un gasto nuevo, sincroniza estado
     setFecha(gasto.date);
     setCategoriaId(gasto.category_id);
     setRecurrente(gasto.recurring);
@@ -42,10 +37,10 @@ const EditarGasto: React.FC<EditarGastoProps> = ({
       category_id: categoriaId,
       recurring: recurrente,
       amount: monto === "" ? 0 : Number(monto),
-      description: descripcion
+      description: descripcion,
     };
     await actualizarGasto(updated);
-    onUpdate();  // recarga la lista en Gastos
+    onUpdate();
     handleClose();
   }
 
@@ -54,11 +49,7 @@ const EditarGasto: React.FC<EditarGastoProps> = ({
   }
 
   return (
-    <div
-      className="modal fade show d-block"
-      style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
-      tabIndex={-1}
-    >
+    <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }} tabIndex={-1}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content p-3">
           <div className="modal-header border-0 text-center">

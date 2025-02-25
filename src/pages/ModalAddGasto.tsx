@@ -1,132 +1,150 @@
-// src/pages/ModalAddGasto.tsx
-import React, { useState } from "react";
-import { crearGasto } from "../services/GastoService";
-import { CategoriaTipo } from "../services/CategoryService";
+import { useState } from "react"
 
-interface ModalAddGastoProps {
-  showModal: boolean;
-  closeModal: () => void;
-  onAddGasto: () => void; // para recargar
-  categorias: CategoriaTipo[];
+export interface Categoria {
+  id: number
+  name: string
 }
 
-const ModalAddGasto: React.FC<ModalAddGastoProps> = ({
-  showModal,
-  closeModal,
-  onAddGasto,
-  categorias
-}) => {
+interface MAGProps {
+  showModal: boolean
+  closeModal: () => void
+  onAddGasto: (fecha: string, categoria: number, recurrente: boolean, monto: number, descripcion: string) => void
+  categorias: Categoria[]
+}
+
+const ModalAddGasto = (props: MAGProps) => {
   const [fecha, setFecha] = useState("");
-  const [categoriaId, setCategoriaId] = useState<number>(
-    categorias.length > 0 ? categorias[0].id : 1
-  );
+  const [categoria, setCategoria] = useState<number>(1);
   const [recurrente, setRecurrente] = useState(false);
   const [monto, setMonto] = useState<number | "">("");
   const [descripcion, setDescripcion] = useState("");
 
-  if (!showModal) return null;
-
-  async function handleAceptar() {
-    await crearGasto({
-      date: fecha,
-      amount: monto === "" ? 0 : Number(monto),
-      description: descripcion,
-      recurring: recurrente,
-      category_id: categoriaId
-    });
-    onAddGasto(); // recarga la lista en Gastos
-    handleClose();
+  const fechaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFecha(e.target.value);
   }
 
-  function handleClose() {
-    closeModal();
-    // Limpiar
+  const categoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategoria(Number(e.target.value));
+  }
+
+  const recurrenteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRecurrente(e.target.checked);
+  }
+
+  const montoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setMonto(val === "" ? "" : Number(val));
+  }
+
+  const descripcionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescripcion(e.target.value);
+  }
+
+  const aceptarClick = () => {
     setFecha("");
-    setCategoriaId(categorias.length > 0 ? categorias[0].id : 1);
+    setCategoria(0);
     setRecurrente(false);
     setMonto("");
     setDescripcion("");
+    props.closeModal();
   }
 
   return (
     <div
-      className="modal fade show d-block"
       style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+      className={props.showModal ? "modal fade show d-block" : "modal fade"}
       tabIndex={-1}
     >
       <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content p-3">
-          <div className="modal-header border-0 text-center">
-            <h5 className="modal-title w-100">Agregar gasto</h5>
-          </div>
-          <div className="modal-body">
-            <form onSubmit={(e) => e.preventDefault()}>
-              <div className="mb-3">
-                <label className="fw-bold">Fecha</label>
+        <div className="modal-content rounded-5 shadow overflow-hidden">
+          <div className="modal-body p-5 text-secondary-emphasis">
+            <h3 className="text-center mb-4 fw-bold">Agregar gasto</h3>
+            <form className="d-flex flex-column gap-3">
+              <div className="d-flex align-items-center">
+                <label className="col-4 fw-bold fs-5">Fecha</label>
                 <input
+                  className="form-control w-100 text-body-secondary"
                   type="date"
-                  className="form-control"
                   value={fecha}
-                  onChange={(e) => setFecha(e.target.value)}
+                  onChange={fechaChange}
                 />
               </div>
-              <div className="mb-3">
-                <label className="fw-bold">Categoría</label>
+              <div className="d-flex align-items-center">
+                <label className="col-4 fw-bold fs-5">Categoria</label>
                 <select
-                  className="form-select"
-                  value={categoriaId}
-                  onChange={(e) => setCategoriaId(Number(e.target.value))}
+                  className="form-select w-100 text-body-secondary"
+                  value={categoria}
+                  onChange={categoriaChange}
                 >
-                  {categorias.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
+                  {
+                    props.categorias.map((c: Categoria) => {
+                      return <option key={c.id} value={c.id}>{c.name}</option>
+                    })
+                  }
                 </select>
               </div>
-              <div className="form-check form-switch mb-3">
-                <label className="form-check-label fw-bold">Recurrente</label>
+              <div className="d-flex align-items-center">
+                <label className="col-4 fw-bold fs-5">Recurrente</label>
                 <input
                   className="form-check-input"
                   type="checkbox"
                   checked={recurrente}
-                  onChange={(e) => setRecurrente(e.target.checked)}
+                  onChange={recurrenteChange}
                 />
               </div>
-              <div className="mb-3">
-                <label className="fw-bold">Monto</label>
+              <div className="d-flex align-items-center">
+                <label className="col-4 fw-bold fs-5">Monto</label>
                 <input
+                  className="form-control w-100 text-body-secondary"
                   type="number"
-                  className="form-control"
                   value={monto}
-                  onChange={(e) =>
-                    setMonto(e.target.value === "" ? "" : Number(e.target.value))
-                  }
+                  onChange={montoChange}
                 />
               </div>
-              <div className="mb-3">
-                <label className="fw-bold">Descripción</label>
+              <div className="d-flex align-items-start mt-2">
+                <label className="col-4 fw-bold fs-5">Descripcion</label>
                 <textarea
-                  className="form-control"
-                  rows={3}
+                  className="form-control flex-grow-1"
+                  rows={4}
+                  placeholder="Escriba aquí el detalle"
                   value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
+                  onChange={descripcionChange}
                 />
+              </div>
+              <div className="d-flex justify-content-between mt-3 mx-5">
+                <button
+                  style={{ width: "45%" }}
+                  type="button"
+                  className="btn btn-secondary px-4 fw-semibold"
+                  onClick={() => {
+                    setFecha("");
+                    setCategoria(0);
+                    setRecurrente(false);
+                    setMonto("");
+                    setDescripcion("");
+                    props.closeModal();
+                  }}
+                >
+                  Cancelar
+                </button>
+                <button
+                  style={{ width: "45%" }}
+                  type="button"
+                  className="btn btn-primary px-4 fw-semibold"
+                  onClick={() => {
+                    props.onAddGasto(fecha, categoria, recurrente, monto == "" ? 0 : monto, descripcion);
+                    aceptarClick();
+                  }}
+                >
+                  Aceptar
+                </button>
               </div>
             </form>
-          </div>
-          <div className="modal-footer border-0 d-flex justify-content-between">
-            <button type="button" className="btn btn-secondary" onClick={handleClose}>
-              Cancelar
-            </button>
-            <button type="button" className="btn btn-primary" onClick={handleAceptar}>
-              Aceptar
-            </button>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ModalAddGasto;
+export default ModalAddGasto
