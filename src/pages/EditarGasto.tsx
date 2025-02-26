@@ -35,6 +35,7 @@ const EditarGasto = ({ id, onClose, onUpdate}: Props) => {
     cargarDatos()
   }, [id, onClose])
 
+
   function cambio(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     if (!dato) return
     let val: string | number | boolean = e.target.value
