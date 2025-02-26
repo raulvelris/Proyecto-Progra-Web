@@ -15,59 +15,18 @@ const Dashboard: React.FC = () => {
   const [totalUsers, setTotalUsers] = useState<number>(0);
   const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>([]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const fetchData = async () => {
     try {
       const response = await fetch(`${URL_BACKEND}/user-statistics`);
       const data = await response.json();
+      console.log(data)
 
       if (data) {
         setTotalUsers(data.totalUsers);
-        setNewUsersByMonth(data.newUsersByMonth.map((entry: { newUsers: number }) => entry.newUsers));
+        //const dataUsers = data.newUsersByMonth.map((entry: { newUsers: number }) => entry.newUsers)
+        
+        setNewUsersByMonth(data.newUsersByMonth);
+        console.log("set usuarios por mes: ", newUsersByMonth.length, newUsersByMonth)
       }
     } catch (error) {
       console.error("Error fetching logs:", error);
@@ -75,167 +34,22 @@ const Dashboard: React.FC = () => {
 
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(() => {
     fetchData();
   }, []);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const data = {
     labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     datasets: [
       {
         label: "Usuarios nuevos por mes",
-        data: newUsersByMonth.length ? newUsersByMonth : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Valores predeterminados si aún no hay datos
+        data: newUsersByMonth.length ? newUsersByMonth : [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Valores predeterminados si aún no hay datos
         backgroundColor: "rgba(60,131,230,255)",
         borderColor: "rgba(60,131,230,255)",
         borderWidth: 1,
       },
     ],
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const options = {
     scales: {
