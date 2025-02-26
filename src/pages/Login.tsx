@@ -3,10 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import '../tailwind.css';
 import ModalLoginError from './ModalLoginError';
 
-export const addAccessLog = async (actionText: string, firstAcc: boolean = false) => {
+export const addAccessLog = async (actionText: string) => {
     const ALInfo = {
-        action: actionText,
-        firstaccess: firstAcc
+        action: actionText
     }
 
     const user = localStorage.getItem('user');
@@ -110,7 +109,7 @@ const Login: React.FC = () => {
             type="button" onClick={async () => {
               // handleLogin();
               await loginHandler(email, password);
-              addAccessLog("Login", true);
+              addAccessLog("Login");
             }}>Ingresar</button>
           <p className="text-gray-500 p-1">O</p>
           <button className="bg-gray-500 text-white px-4 py-2 rounded w-84 hover:bg-gray-600 active:bg-gray-700 cursor-pointer transition duration-200" 
