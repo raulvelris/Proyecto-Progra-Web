@@ -5,6 +5,8 @@ import { Chart, registerables } from "chart.js";
 import { getUserStatistics } from "../services/UserStatsService";
 
 
+const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
+
 Chart.register(...registerables);
 
 
@@ -14,19 +16,169 @@ const Dashboard: React.FC = () => {
   const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>([]);
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getUserStatistics();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`${URL_BACKEND}/user-statistics`);
+      const data = await response.json();
+
       if (data) {
         setTotalUsers(data.totalUsers);
         setNewUsersByMonth(data.newUsersByMonth.map((entry: { newUsers: number }) => entry.newUsers));
       }
-    };
+    } catch (error) {
+      console.error("Error fetching logs:", error);
+    }
+
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  useEffect(() => {
     fetchData();
   }, []);
 
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const data = {
     labels: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     datasets: [
@@ -39,6 +191,50 @@ const Dashboard: React.FC = () => {
       },
     ],
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   const options = {
@@ -63,14 +259,14 @@ const Dashboard: React.FC = () => {
   return (
     <Container fluid className="p-4" style={{ backgroundColor: "rgba(243,243,253,255)" }}>
       <h3 className="mb-5">Dashboard</h3>
-     
+
       <Row className="mb-5">
         <Col md={4}>
           <Card className="mb-5">
             <Card.Body className="text-start">
               <Card.Title>Usuarios Totales</Card.Title>
               <Card.Text className="fs-3 text-center">
-                {totalUsers} {}
+                {totalUsers} { }
               </Card.Text>
             </Card.Body>
           </Card>
@@ -83,7 +279,7 @@ const Dashboard: React.FC = () => {
           <Card>
             <Card.Body>
               <Card.Title>Usuarios nuevos por mes</Card.Title>
-              <Bar data={data} options={options} /> {}
+              <Bar data={data} options={options} /> { }
             </Card.Body>
           </Card>
         </Col>
