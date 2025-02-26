@@ -1,10 +1,10 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, /*useMemo*/ } from "react";
 import { obtenerPresupuestos } from "../services/PresupuestoService";
 import { PresupuestoTipo } from "../types/PresupuestoTipo";
 import { obtenerCategorias, CategoriaTipo } from "../services/CategoryService";
-import { FaEdit, FaTrash, FaFilter, FaPlus } from "react-icons/fa"
+import { FaEdit, FaTrash, /*FaFilter, FaPlus*/ } from "react-icons/fa"
 
-import AgregarPresupuestoModal, { Categoria } from "./AgregarPresupuestoModal";
+import AgregarPresupuestoModal, { /*Categoria*/ } from "./AgregarPresupuestoModal";
 import EliminarPresupuestoModal from "./EliminarPresupuestoModal";
 import EditarPresupuestoModal from "./EditarPresupuestoModal";
 import { Table } from "react-bootstrap";
@@ -38,11 +38,12 @@ function Presupuestos() {
         return cat ? cat.name : String(catId);
     }
 
+    /* comentado para probar npm run build
     // Mapea nombre => category_id (para filtrar)
     function getCategoryIdByName(name: string): number | null {
         const cat = categorias.find((c) => c.name === name);
         return cat ? cat.id : null;
-    }
+    }*/
 
     function handleDelete(p: PresupuestoTipo) {
         setSelectedPresupuesto(p);
