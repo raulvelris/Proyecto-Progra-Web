@@ -15,9 +15,9 @@ import { BudgetsTipo } from "../types/BudgetsTipo";
     const data = await resp.json();
 
     // Devuelve un array vacío si no hay datos o si no es un array
-    if (!Array.isArray(data) || data.length === 0) return [];
+    if (!Array.isArray(data.presupuestos) || data.length === 0) return [];
 
-    return data.map((item: any) => ({
+    return data.presupuestos.map((item: any) => ({
         monthly_budget: item.monthly_budget,
         category_id: item.category_id
     }));
