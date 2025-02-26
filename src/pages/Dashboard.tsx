@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
     datasets: [
       {
         label: "Usuarios nuevos por mes",
-        data: newUsersByMonth.length ? newUsersByMonth : [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Valores predeterminados si aún no hay datos
+        data: newUsersByMonth ? newUsersByMonth : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Valores predeterminados si aún no hay datos
         backgroundColor: "rgba(60,131,230,255)",
         borderColor: "rgba(60,131,230,255)",
         borderWidth: 1,
