@@ -1,7 +1,7 @@
 import  {useState, useEffect } from "react"
 import { Table } from "react-bootstrap"
 import { FaEdit, FaTrash, FaFilter, FaPlus } from "react-icons/fa"
-
+import { addAccessLog } from "./Login"
 import { User } from "./AddUserModal"
 
 import EditUserModal from "./EditUserModal"
@@ -198,7 +198,7 @@ const ListUsers = () => {
                             <th className="text-start">Id</th>
                             <th className="text-start">Nombre</th>
                             <th className="text-start">Correo</th>
-                            <th className="text-start">Password</th>
+                            {/* <th className="text-start">Password</th> */}
                             <th className="text-start">Rol</th>
                             <th className="text-center">Accion</th>
                         </tr>
@@ -209,7 +209,7 @@ const ListUsers = () => {
                                 <td className="text-start">{String(user.id).padStart(3, '0')}</td>
                                 <td className="text-start">{user.name}</td>
                                 <td className="text-start">{user.email}</td>
-                                <td className="text-start">{user.password_hash}</td>
+                                {/*<td className="text-start">{user.password_hash}</td>*/}
                                 <td>
                                     {
                                         user.Role != null
@@ -244,6 +244,7 @@ const ListUsers = () => {
                     onSave={ async (userToEdit : User) => {
                         await httpUpdateUser(selectedUserId, userToEdit)
                         closeModal() 
+                        addAccessLog("Editar Usuario")
                     }}
                 />
             )}
@@ -253,6 +254,7 @@ const ListUsers = () => {
                     onDelete={ async () => {
                         await httpDeleteUser(selectedUserId)
                         closeModal()
+                        addAccessLog("Eliminar Usuario")
                     }}
                 />
             )}
@@ -275,6 +277,7 @@ const ListUsers = () => {
                     onSave={ async (user : User) => {
                         await httpAddUser(user)
                         closeModal() 
+                        addAccessLog("Agregar Usuario")
                     }}
                 />
             )}
