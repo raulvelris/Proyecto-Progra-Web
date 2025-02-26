@@ -1,7 +1,7 @@
 import  {useState, useEffect } from "react"
 import { Table } from "react-bootstrap"
 import { FaEdit, FaTrash, FaFilter, FaPlus } from "react-icons/fa"
-
+import { addAccessLog } from "./Login"
 import { User } from "./AddUserModal"
 
 import EditUserModal from "./EditUserModal"
@@ -244,6 +244,7 @@ const ListUsers = () => {
                     onSave={ async (userToEdit : User) => {
                         await httpUpdateUser(selectedUserId, userToEdit)
                         closeModal() 
+                        addAccessLog("Editar Usuario")
                     }}
                 />
             )}
@@ -253,6 +254,7 @@ const ListUsers = () => {
                     onDelete={ async () => {
                         await httpDeleteUser(selectedUserId)
                         closeModal()
+                        addAccessLog("Eliminar Usuario")
                     }}
                 />
             )}
@@ -275,6 +277,7 @@ const ListUsers = () => {
                     onSave={ async (user : User) => {
                         await httpAddUser(user)
                         closeModal() 
+                        addAccessLog("Agregar Usuario")
                     }}
                 />
             )}
