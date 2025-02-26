@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:5000/api/admin";
+const API_URL = "http://localhost:5000/filter-expenses";
 
 
 //Definir una interfaz para los filtros
