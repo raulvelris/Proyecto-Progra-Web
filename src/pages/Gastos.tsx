@@ -9,6 +9,10 @@ import EliminarGasto from "./EliminarGasto";
 import { obtenerCategorias, CategoriaTipo } from "../services/CategoryService";
 import EditarGasto from "./EditarGasto";
 import { addAccessLog } from "./Login";
+import { obtenerPresupuestos } from "../services/BudgetsService";
+import AdvertenciaExcesoModal from "../components/AdvertenciaExcesoModal";
+import { BudgetsTipo } from "../types/BudgetsTipo";
+
 
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([]);
@@ -20,6 +24,11 @@ function Gastos() {
   const [minMonto, setMinMonto] = useState<number | null>(null);
   const [maxMonto, setMaxMonto] = useState<number | null>(null);
   const [filtroRec, setFiltroRec] = useState("");
+  //Erling
+  const [presupuestos, setPresupuestos] = useState<Pick<BudgetsTipo, 'monthly_budget' | 'category_id'>[]>([]);
+  const [showWarning, setShowWarning] = useState(false);
+  const [warningData, setWarningData] = useState<{ categoria: string; presupuesto: number; gastoActual: number } | null>(null);
+
 
   // Modals
   const [selectedGasto, setSelectedGasto] = useState<GastoTipo | null>(null);
@@ -55,6 +64,49 @@ function Gastos() {
     const cat = categorias.find((c) => c.name === name);
     return cat ? cat.id : null;
   }
+
+  //Cargar los presupuestos//ERLING
+  async function cargarPresupuestos() {
+    const presupuestosBD = await obtenerPresupuestos();
+    setPresupuestos(presupuestosBD);
+  }
+
+  useEffect(() => {
+    cargaGastos();
+    cargarCategorias();
+    cargarPresupuestos();
+  }, []);
+
+  function verificarPresupuesto(gastos: GastoTipo[]) {
+    const categoriaGastos: { [key: number]: number } = {};
+    
+    gastos.forEach(g => {
+      categoriaGastos[g.category_id] = (categoriaGastos[g.category_id] || 0) + g.amount;
+    });
+  
+    presupuestos.forEach(p => {
+      const gastoActual = categoriaGastos[p.category_id] || 0;
+      if (gastoActual >= p.monthly_budget * 0.9) {
+        setWarningData({
+          categoria: `Categoría ${p.category_id}`,
+          presupuesto: p.monthly_budget,
+          gastoActual
+        });
+        setShowWarning(true);
+      }
+    });
+  }
+
+  async function cargaGastos() {
+    const gastosBD = await obtenerGastos();
+    setLista(gastosBD);
+    verificarPresupuesto(gastosBD);
+  }
+  
+
+  
+  
+  
 
   // Filtrado local
   const datosFiltrados = useMemo(() => {
@@ -134,6 +186,16 @@ function Gastos() {
   return (
     <div className="container mt-4">
       <h2>Mis Gastos</h2>
+      {showWarning && warningData && (
+    <AdvertenciaExcesoModal
+    showModal={showWarning}
+    closeModal={() => setShowWarning(false)}
+    categoria={warningData.categoria}
+    presupuesto={warningData.presupuesto}
+    gastoActual={warningData.gastoActual}
+  />
+  )}
+
       <div className="d-flex justify-content-between align-items-center my-3">
         <FiltroGastos
           filtroCategoria={filtroCategoria}

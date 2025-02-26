@@ -1,29 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { Button, Card, CardContent } from "@/components/ui";
+import React from "react";
 
 interface AdvertenciaExcesoModalProps {
-  categoryName: string;
-  currentAmount: number;
-  monthlyBudget: number;
+  showModal: boolean;
   closeModal: () => void;
+  categoria: string;
+  presupuesto: number;
+  gastoActual: number;
 }
 
-const AdvertenciaExcesoModal: React.FC<AdvertenciaExcesoModalProps> = ({ categoryName, currentAmount, monthlyBudget, closeModal }) => {
-  const percentage = ((currentAmount / monthlyBudget) * 100).toFixed(0);
+const AdvertenciaExcesoModal: React.FC<AdvertenciaExcesoModalProps> = ({
+  showModal,
+  closeModal,
+  categoria,
+  presupuesto,
+  gastoActual,
+}) => {
+  if (!showModal) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <Card className="w-96 p-6 rounded-2xl shadow-lg bg-white">
-        <CardContent className="text-center">
-          <h2 className="text-xl font-bold mb-4">¡Advertencia de Presupuesto!</h2>
-          <p className="mb-4">
-            Has alcanzado el <strong>{percentage}%</strong> del presupuesto mensual asignado para la categoría <strong>{categoryName}</strong>.
-          </p>
-          <Button onClick={closeModal} className="w-full bg-red-500 text-white hover:bg-red-600">
-            Entendido
-          </Button>
-        </CardContent>
-      </Card>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>⚠️ Advertencia de Presupuesto ⚠️</h2>
+        <p>
+          Estás cerca o has superado tu presupuesto de <strong>{categoria}</strong>.
+        </p>
+        <p>
+          Presupuesto: <strong>${presupuesto.toFixed(2)}</strong>
+        </p>
+        <p>
+          Gasto actual: <strong>${gastoActual.toFixed(2)}</strong>
+        </p>
+        <button onClick={closeModal} className="btn btn-warning">
+          Entendido
+        </button>
+      </div>
     </div>
   );
 };
