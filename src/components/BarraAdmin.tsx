@@ -1,65 +1,96 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ListGroup, Image } from "react-bootstrap";
 import { VscGraph } from "react-icons/vsc";
 import { FaUsers, FaHistory, FaCog, FaSignOutAlt } from "react-icons/fa";
 
-const Barra: React.FC = () => {
-  return (
-    <div className="sidebar d-flex flex-column p-3">
-      <Image
-        src="https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/45843.png&w=350&h=254"
-        roundedCircle
-        className="mb-3"
-      />
-      <h5 className="text-center">Lionel Messi</h5>
-      <ListGroup variant="flush">
+const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
 
-      <ListGroup.Item
-          as={Link} to="/appadmin/dashboard"
-          action
-          className="text-secondary d-flex align-items-center">
-          <VscGraph /> Dashboard
-      </ListGroup.Item>
+interface User {
+    id: number;
+    name: string;
+    email: string;
+}
 
+const BarraAdmin: React.FC = () => {
+    const [user, setUser] = useState<User | null>(null);
 
-      <ListGroup.Item
-        as={Link} to="/appadmin/usuarios"
-        action
-        className="text-muted d-flex align-items-center">
-        <FaUsers /> Usuarios
-      </ListGroup.Item>
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                console.error('User not found in localStorage');
+                return;
+            }
 
-      
-      <ListGroup.Item
-        as={Link} to="/appadmin/historial"
-        action
-        className="text-secondary d-flex align-items-center">
-        <FaHistory /> Historial
-      </ListGroup.Item>
+            const token = JSON.parse(userStr).token;
 
-      <ListGroup.Item
-        as={Link} to="/appadmin/configuracion"
-        action
-        className="text-muted d-flex align-items-center">
-        <FaCog /> Configuracion
-      </ListGroup.Item>
-        
-      <ListGroup.Item
-        as={Link}
-        to="/"
-        action
-        className="text-muted salir-item d-flex align-items-center"
-        onClick={() => {
-          localStorage.removeItem("user");
-          console.log("Saliendo...");
-          // navigate('/');
-        }}>
-        <FaSignOutAlt /> Salir
-      </ListGroup.Item>
-      </ListGroup>
-    </div>
-  );
-};
+            try {
+                const response = await fetch(`${URL_BACKEND}/perfil`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (data.msg === "") {
+                    setUser(data.user);
+                } else {
+                    console.error('Error fetching user:', data.msg);
+                }
+            } catch (error) {
+                console.error('Error fetching user:', error);
+            }
+        };
 
-export default Barra;
+        fetchUser();
+    }, []);
+
+    return (
+        <div className="sidebar d-flex flex-column p-3">
+            <Image
+                src="https://a.espncdn.com/combiner/i?img=/i/headshots/soccer/players/full/45843.png&w=350&h=254"
+                roundedCircle
+                className="mb-3"
+            />
+            <h5 className="text-center">{user ? user.name : "Cargando..."}</h5>
+            <ListGroup variant="flush">
+                <ListGroup.Item
+                    as={Link} to="/appadmin/dashboard"
+                    action
+                    className="text-secondary d-flex align-items-center">
+                    <VscGraph /> Dashboard
+                </ListGroup.Item>
+                <ListGroup.Item
+                    as={Link} to="/appadmin/usuarios"
+                    action
+                    className="text-muted d-flex align-items-center">
+                    <FaUsers /> Usuarios
+                </ListGroup.Item>
+                <ListGroup.Item
+                    as={Link} to="/appadmin/historial"
+                    action
+                    className="text-secondary d-flex align-items-center">
+                    <FaHistory /> Historial
+                </ListGroup.Item>
+                <ListGroup.Item
+                    as={Link} to="/appadmin/configuracion"
+                    action
+                    className="text-muted d-flex align-items-center">
+                    <FaCog /> Configuración
+                </ListGroup.Item>
+                <ListGroup.Item
+                    as={Link}
+                    to="/"
+                    action
+                    className="text-muted salir-item d-flex align-items-center"
+                    onClick={() => {
+                        localStorage.removeItem("user");
+                        console.log("Saliendo...");
+                        // navigate('/');
+                    }}>
+                    <FaSignOutAlt /> Salir
+                </ListGroup.Item>
+            </ListGroup>
+        </div>
+    );
+}
+
+export default BarraAdmin;
