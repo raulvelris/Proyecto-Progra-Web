@@ -22,13 +22,14 @@ const Historial = () => {
             console.log("Data from API:",data)
             const formattedLogs: AccessLog[] = data.map((log: any) => ({
                 id: log.id,
-                nombre: log.Usuario ? log.Usuario.name : "Desconocido",
-                correo: log.Usuario ? log.Usuario.email : "N/A",
+                nombre: log.usuario ? log.usuario.name : "Desconocido",
+                correo: log.usuario ? log.usuario.email : "N/A",
                 fecha: new Date(log.access_time).toLocaleDateString(),
                 hora: new Date(log.access_time).toLocaleTimeString(),
                 accion: log.action,
             }));
             setLogs(formattedLogs);
+            console.log(formattedLogs)
         } catch (error) {
             console.error("Error fetching logs:", error);
         }
