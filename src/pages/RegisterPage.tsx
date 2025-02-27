@@ -32,7 +32,7 @@ const RegisterPage = () => {
             password: register_pswd
         }
 
-        const resp = await fetch('http://localhost:5000/register', {
+        const resp = await fetch('http://localhost:5000/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
