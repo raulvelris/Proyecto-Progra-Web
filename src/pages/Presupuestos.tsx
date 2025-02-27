@@ -38,11 +38,12 @@ function Presupuestos() {
         return cat ? cat.name : String(catId);
     }
 
+    /* comentado para probar npm run build
     // Mapea nombre => category_id (para filtrar)
     function getCategoryIdByName(name: string): number | null {
         const cat = categorias.find((c) => c.name === name);
         return cat ? cat.id : null;
-    }
+    }*/
 
     function handleDelete(p: PresupuestoTipo) {
         setSelectedPresupuesto(p);
@@ -64,7 +65,7 @@ function Presupuestos() {
             category_id: ng_categoria,
         };
 
-        const user = localStorage.getItem('user');
+        const user = sessionStorage.getItem('user');
         let token = '';
         if (user) {
             const userInfo = JSON.parse(user);

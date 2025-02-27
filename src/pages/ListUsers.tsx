@@ -9,7 +9,7 @@ import DeleteUserModal from "./DeleteUserModal"
 import FilterUserModal from "./FilterUserModal"
 import AddUserModal, { Role } from "./AddUserModal"
 
-const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000"
+const URL_BACKEND = "http://localhost:5000"
 
 export interface ListUserItem {
     id: number
@@ -21,6 +21,7 @@ export interface ListUserItem {
 }
 
 const ListUsers = () => {
+
     const [allUsers, setAllUsers] = useState<ListUserItem[]>([])
     const [filterRole, setFilterRole] = useState<number>(0)
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null) 
@@ -28,6 +29,37 @@ const ListUsers = () => {
     const [roles, setRoles] = useState<Role[]>([])
     const [modalType, setModalType] = useState<'edit' | 'delete' | 'filter' | 'add'>('edit')
     const [userToEdit, setUserToEdit] = useState<ListUserItem | null>(null)
+    const [currentUserId, setCurrentUserId] = useState<number>(0);
+
+    const httpGetId = async () => {
+        const user = sessionStorage.getItem('user');
+        let token = '';
+        if (user) {
+            const userInfo = JSON.parse(user);
+            token = userInfo.token;
+        }
+
+        const url = URL_BACKEND + "/admin/users/me"
+        const resp = await fetch(url,  {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+        })
+        
+        let id = 0
+        const data = await resp.json()
+        if  (data.msg == ""){
+            id = data.id
+            console.log(id)
+            setCurrentUserId(id)
+        }else {
+            console.error(`Error al obtener usuario: ${data.msg}`)
+        }
+    }
+
+    useEffect(() => {
+        httpGetId()
+    }, [])
 
     const httpAddUser = async (user : User) => {
         const url = URL_BACKEND + "/admin/users"
@@ -105,11 +137,11 @@ const ListUsers = () => {
 
     const httpUpdateUser = async (id: number, user: User) => {
         const url = `${URL_BACKEND}/admin/users/${id}`
-        console.log(url)
+        console.log(user.name)
         const resp = await fetch(url, {
             method: "PUT",
             body: JSON.stringify({
-                name: user.name,
+                name: user.name, // cambio
                 email: user.email,
                 password_hash: user.password_hash,
                 role_id: user.role_id,
@@ -141,6 +173,10 @@ const ListUsers = () => {
             console.error(`Error al obtener usuarios filtrados: ${data.msg}`)
         }
     }
+
+    useEffect(() => {
+            httpGetId();
+    }, []);
 
     useEffect(() => {
         if (filterRole === 0) {
@@ -246,6 +282,7 @@ const ListUsers = () => {
                         closeModal() 
                         addAccessLog("Editar Usuario")
                     }}
+                    isCurrentUser = { selectedUserId === currentUserId}
                 />
             )}
             {isModalOpen && selectedUserId != null && modalType === 'delete' && (
@@ -256,6 +293,7 @@ const ListUsers = () => {
                         closeModal()
                         addAccessLog("Eliminar Usuario")
                     }}
+                    isCurrentUser = { selectedUserId === currentUserId}
                 />
             )}
             {isModalOpen && modalType === 'filter' && (

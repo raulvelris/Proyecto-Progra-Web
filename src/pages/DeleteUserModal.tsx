@@ -1,6 +1,7 @@
 interface DeleteUserModalProps {
     closeModal: () => void
     onDelete: () => void
+    isCurrentUser: boolean // nuevo   
 }
 
 const DeleteUserModal = (props: DeleteUserModalProps) => {
@@ -13,11 +14,21 @@ const DeleteUserModal = (props: DeleteUserModalProps) => {
                         <h4 className="modal-title">Aviso!</h4>
                     </div>
                     <div className="modal-body text-center">
-                        <p>¿Estás seguro que deseas eliminar este registro?</p>
+                        {props.isCurrentUser ? (
+                            <p><strong>No puedes eliminarte a ti mismo</strong></p>
+                        ) : (
+                            <p>¿Estás seguro que deseas eliminar este registro?</p>
+                        )}
                     </div>
                     <div className="modal-footer justify-content-center border-0">
-                        <button type="button" className="btn btn-secondary mx-3" onClick={ () => props.closeModal()}>Cancelar</button>
-                        <button type="button" className="btn btn-primary mx-3" onClick={ () => props.onDelete()}>Eliminar</button>
+                        {props.isCurrentUser ? (
+                            <button type="button" className="btn btn-secondary mx-3" onClick={ () => props.closeModal()}>Ok</button>
+                        ) : (
+                            <>
+                                <button type="button" className="btn btn-secondary mx-3" onClick={ () => props.closeModal()}>Cancelar</button>
+                                <button type="button" className="btn btn-primary mx-3" onClick={ () => props.onDelete()}>Eliminar</button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
