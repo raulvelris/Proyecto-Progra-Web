@@ -2,13 +2,13 @@ import { BudgetsTipo } from "../types/BudgetsTipo";
   
 
   export async function obtenerPresupuestos(): Promise<Pick<BudgetsTipo, 'monthly_budget' | 'category_id'>[]> {
-    const userStr = localStorage.getItem("user");
+    const userStr = sessionStorage.getItem("user");
     let token = "";
     if (userStr) {
         token = JSON.parse(userStr).token;
     }
 
-    const resp = await fetch("http://localhost:5000/budgets/", {
+    const resp = await fetch("http://localhost:5000/budgets", {
         headers: { Authorization: `Bearer ${token}` }
     });
 
