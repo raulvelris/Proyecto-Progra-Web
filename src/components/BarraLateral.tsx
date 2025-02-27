@@ -18,7 +18,7 @@ const BarraLateral: React.FC = () => {
 
     useEffect(() => {
         const fetchUser = async () => {
-            const userStr = localStorage.getItem('user');
+            const userStr = sessionStorage.getItem('user');
             if (!userStr) {
                 console.error('User not found in localStorage');
                 return;
@@ -86,7 +86,7 @@ const BarraLateral: React.FC = () => {
                     action
                     className="text-muted salir-item d-flex align-items-center"
                     onClick={() => {
-                        localStorage.removeItem("user");
+                        sessionStorage.removeItem("user");
                         console.log("Saliendo...");
                         // navigate('/');
                     }}>
