@@ -49,33 +49,33 @@ function Gastos() {
     cargarPresupuestos();
   }, []);
 
-  const cargarGastos = async () => {
+  async function cargarGastos() {
     const gastosBD = await obtenerGastos();
     setLista(gastosBD);
     return gastosBD; // Devuelve la lista para usarla inmediatamente si es necesario
   }
 
-  const cargarCategorias = async () => {
+  async function cargarCategorias() {
     const cats = await obtenerCategorias();
     setCategorias(cats);
   }
 
-  const cargarPresupuestos = async () => {
+  async function cargarPresupuestos() {
     const presupuestosBD = await obtenerPresupuestos();
     setPresupuestos(presupuestosBD);
   }
 
-  const getCategoryName = (catId: number): string => {
+  function getCategoryName(catId: number): string {
     const cat = categorias.find((c) => c.id === catId);
     return cat ? cat.name : String(catId);
   }
 
-  const getCategoryIdByName = (name: string): number | null => {
+  function getCategoryIdByName(name: string): number | null {
     const cat = categorias.find((c) => c.name === name);
     return cat ? cat.id : null;
   }
 
-  const verificarPresupuesto = (gastos: GastoTipo[], categoriaId: number) => {
+  function verificarPresupuesto(gastos: GastoTipo[], categoriaId: number) {
     // Calcular el gasto total para la categoría específica
     const gastoActual = gastos
       .filter((g) => g.category_id === categoriaId)
@@ -239,7 +239,7 @@ function Gastos() {
       const gastosActualizados = await cargarGastos(); // Recargar la lista de gastos
       verificarPresupuesto(gastosActualizados, ng_categoria); // Verificar solo la categoría afectada
     } else {
-      console.log("Error al agregar gasto")
+      console.log("Error al agregar gasto");
     }
   };
 

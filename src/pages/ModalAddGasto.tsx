@@ -20,8 +20,7 @@ const ModalAddGasto = (props: MAGProps) => {
   const [descripcion, setDescripcion] = useState("");
 
   const fechaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFecha(e.target.value)
-    
+    setFecha(e.target.value);
   }
 
   const categoriaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
