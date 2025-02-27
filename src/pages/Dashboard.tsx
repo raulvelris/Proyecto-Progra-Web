@@ -2,13 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { getUserStatistics } from "../services/UserStatsService";
-
 
 const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
 
 Chart.register(...registerables);
-
 
 const Dashboard: React.FC = () => {
   // Estados para los datos dinámicos
@@ -24,10 +21,10 @@ const Dashboard: React.FC = () => {
       if (data) {
         setTotalUsers(data.totalUsers);
         //const dataUsers = data.newUsersByMonth.map((entry: { newUsers: number }) => entry.newUsers)
-        
+        // console.log(newUsersByMonth)
         setNewUsersByMonth(data.newUsersByMonth);
-        console.log("set usuarios por mes: ", newUsersByMonth.length, newUsersByMonth)
       }
+
     } catch (error) {
       console.error("Error fetching logs:", error);
     }
@@ -36,6 +33,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     fetchData();
+    console.log(newUsersByMonth);
   }, []);
 
   const data = {
