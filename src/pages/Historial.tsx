@@ -15,65 +15,6 @@ export interface AccessLog {
 const Historial = () => {
     const [logs, setLogs] = useState<AccessLog[]>([]);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const fetchLogs = async () => {
         try {
             const response = await fetch(`${URL_BACKEND}/accesslogs`);
