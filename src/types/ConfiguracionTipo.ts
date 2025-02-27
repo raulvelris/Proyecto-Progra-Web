@@ -1,4 +1,3 @@
-// src/types/ConfiguracionTipo.ts
 export interface ConfiguracionTipo {
     id: number;
     nombre: string;
