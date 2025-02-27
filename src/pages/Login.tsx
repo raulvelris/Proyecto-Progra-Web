@@ -8,7 +8,7 @@ export const addAccessLog = async (actionText: string) => {
         action: actionText
     }
 
-    const user = localStorage.getItem('user');
+    const user = sessionStorage.getItem('user');
     let token = '';
     if (user) {
       const userInfo = JSON.parse(user);
@@ -79,7 +79,7 @@ const Login: React.FC = () => {
       console.log(data.body);
       setEmail('');
       setPassword('');
-      localStorage.setItem('user', JSON.stringify(token));
+      sessionStorage.setItem('user', JSON.stringify(token));
       token.role_id === 1 ? navigate('/appadmin/dashboard') : navigate('/app/dashboard');
     } else {
       setShowModal(true);
@@ -88,7 +88,7 @@ const Login: React.FC = () => {
 
   // Verificar si el usuario ya está autenticado al cargar el componente
   useEffect(() => {
-    const loggedUser = localStorage.getItem("user");
+    const loggedUser = sessionStorage.getItem("user");
     if (loggedUser) {
       navigate('app/dashboard'); // Redirigir si ya está autenticado
     }

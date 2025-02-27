@@ -39,8 +39,6 @@ const RecuperarContraseña = () => {
     const data = await resp.json()
           if (data.msg == "") {
               // Cambio de contraseña exitoso"
-              const userJSON = JSON.stringify(userData)
-              console.log(userJSON)
               console.log("Cambio de contraseña exitoso")
               navigate("/")
               

@@ -32,7 +32,7 @@ const RegisterPage = () => {
             password: register_pswd
         }
 
-        const resp = await fetch('http://localhost:5000/register', {
+        const resp = await fetch('http://localhost:5000/register/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,6 +49,7 @@ const RegisterPage = () => {
         }
     }
 
+    /* comentado para probar npm run build
     const sendEmail = async () => {
         const mainpage = 'http://localhost:5173/app/dashboard';
 
@@ -77,7 +78,7 @@ const RegisterPage = () => {
         } catch (error) {
             console.error(error);
         }
-    }
+    }*/
 
     
 

@@ -5,7 +5,7 @@ const API_URL = "http://localhost:5000/expenses"; // Ajusta tu puerto/URL
 
 // 1) Obtener todos los gastos
 export async function obtenerGastos(): Promise<GastoTipo[]> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;
@@ -19,7 +19,7 @@ export async function obtenerGastos(): Promise<GastoTipo[]> {
 
 // 2) Crear gasto
 export async function crearGasto(nuevo: Partial<GastoTipo>): Promise<void> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;
@@ -36,7 +36,7 @@ export async function crearGasto(nuevo: Partial<GastoTipo>): Promise<void> {
 
 // 3) Actualizar gasto
 export async function actualizarGasto(g: GastoTipo): Promise<void> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;
@@ -53,7 +53,7 @@ export async function actualizarGasto(g: GastoTipo): Promise<void> {
 
 //service para EditarGasto
 export async function editGasto(g: GastoTipo): Promise<void> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;
@@ -70,7 +70,7 @@ export async function editGasto(g: GastoTipo): Promise<void> {
 
 // 4) Eliminar gasto
 export async function eliminarGasto(id: number): Promise<void> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;

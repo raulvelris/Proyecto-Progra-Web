@@ -6,13 +6,14 @@ interface EditUserModalProps {
   user: ListUserItem
   roles : Role[]
   closeModal: () => void
-  onSave: (user: Omit<ListUserItem, 'id' | 'Role'>) => void;
+  onSave: (user: Omit<ListUserItem, 'id' | 'Role'>) => void
+  isCurrentUser: boolean // nuevo
 }
 
 const EditUserModal = (props : EditUserModalProps) => {
     const [userData, setUserData] = useState({
-        name: props.user.name,
-        email: props.user.email,
+        name: props.user.name ?? "",
+        email: props.user.email ?? "",
         password_hash: "",
         role_id: props.user.role_id
     })
@@ -68,24 +69,26 @@ const EditUserModal = (props : EditUserModalProps) => {
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="mb-3 d-flex align-items-center">
-                                <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Rol usuario</strong></label>
-                                <select
-                                    name="role_id"
-                                    className="form-select"
-                                    style={{ width: "200px" }}
-                                    value={userData.role_id}
-                                    onChange={handleChange}
-                                    >
-                                    {
-                                        props.roles.map((role : Role) => {
-                                            return <option key={String(role.id)} value={role.id}>
-                                                {role.name}
-                                            </option>
-                                        })
-                                    }
-                                </select>
-                            </div>
+                            {!props.isCurrentUser && ( 
+                                <div className="mb-3 d-flex align-items-center">
+                                    <label className="form-label me-3 ms-2" style={{ minWidth: "120px" }}><strong>Rol usuario</strong></label>
+                                    <select
+                                        name="role_id"
+                                        className="form-select"
+                                        style={{ width: "200px" }}
+                                        value={userData.role_id}
+                                        onChange={handleChange}
+                                        >
+                                        {
+                                            props.roles.map((role : Role) => {
+                                                return <option key={String(role.id)} value={role.id}>
+                                                    {role.name}
+                                                </option>
+                                            })
+                                        }
+                                    </select>
+                                </div> 
+                            )}    
                             {
                                 hayError &&
                                 <div className="alert alert-danger" role="alert">
