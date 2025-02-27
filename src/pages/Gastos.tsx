@@ -181,7 +181,7 @@ function Gastos() {
       recurring: ng_recurrente,
       category_id: ng_categoria
     };
-    const user = localStorage.getItem("user");
+    const user = sessionStorage.getItem("user");
     let token = "";
 
     if (user) {

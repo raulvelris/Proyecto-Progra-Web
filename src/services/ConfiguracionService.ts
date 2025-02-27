@@ -22,7 +22,7 @@ export function actualizarConfiguracion(nueva: ConfiguracionTipo) {
 
 // ============ NUEVO: Llamadas reales al backend ============
 export async function fetchConfiguracionBackend(): Promise<ConfiguracionTipo> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;
@@ -46,7 +46,7 @@ export async function fetchConfiguracionBackend(): Promise<ConfiguracionTipo> {
 }
 
 export async function updateConfiguracionBackend(conf: ConfiguracionTipo): Promise<ConfiguracionTipo> {
-  const userStr = localStorage.getItem("user");
+  const userStr = sessionStorage.getItem("user");
   let token = "";
   if (userStr) {
     token = JSON.parse(userStr).token;

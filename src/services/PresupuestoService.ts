@@ -4,7 +4,7 @@ const API_URL = "http://localhost:5000/budgets"; // Ajusta tu puerto/URL
 
 // 1) Obtener todos los presupuestos
 export async function obtenerPresupuestos(): Promise<PresupuestoTipo[]> {
-    const userStr = localStorage.getItem("user");
+    const userStr = sessionStorage.getItem("user");
     let token = "";
     if (userStr) {
         token = JSON.parse(userStr).token;
@@ -18,7 +18,7 @@ export async function obtenerPresupuestos(): Promise<PresupuestoTipo[]> {
 
 // 2) Crear presupuesto
 export async function crearPresupuesto(nuevo: Partial<PresupuestoTipo>): Promise<void> {
-    const userStr = localStorage.getItem("user");
+    const userStr = sessionStorage.getItem("user");
     let token = "";
     if (userStr) {
         token = JSON.parse(userStr).token;
@@ -35,7 +35,7 @@ export async function crearPresupuesto(nuevo: Partial<PresupuestoTipo>): Promise
 
 // 3) Actualizar presupuesto
 export async function actualizarPresupuesto(p: PresupuestoTipo): Promise<void> {
-    const userStr = localStorage.getItem("user");
+    const userStr = sessionStorage.getItem("user");
     let token = "";
     if (userStr) {
         token = JSON.parse(userStr).token;
@@ -52,7 +52,7 @@ export async function actualizarPresupuesto(p: PresupuestoTipo): Promise<void> {
 
 // 4) Eliminar presupuesto
 export async function eliminarPresupuesto(id: number): Promise<void> {
-    const userStr = localStorage.getItem("user");
+    const userStr = sessionStorage.getItem("user");
     let token = "";
     if (userStr) {
         token = JSON.parse(userStr).token;
