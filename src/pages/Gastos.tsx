@@ -95,7 +95,7 @@ function Gastos() {
     }
   }
 
-  const cerrarAdvertencia = async () => {
+  const cerrarAdvertencia = () => {
     setShowWarning(false);
     setWarningData(null);
   }
