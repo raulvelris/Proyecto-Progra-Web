@@ -34,7 +34,7 @@ const ListUsers = () => {
         const resp = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
-               nombre : user.name,
+               name : user.name,
                email : user.email,
                password_hash : user.password_hash,
                role_id : user.role_id
@@ -109,7 +109,7 @@ const ListUsers = () => {
         const resp = await fetch(url, {
             method: "PUT",
             body: JSON.stringify({
-                nombre: user.name,
+                name: user.name,
                 email: user.email,
                 password_hash: user.password_hash,
                 role_id: user.role_id,

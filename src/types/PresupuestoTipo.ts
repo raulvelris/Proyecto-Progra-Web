@@ -3,4 +3,4 @@ export interface PresupuestoTipo {
     user_id?: number; 
     monthly_budget: number;
     category_id: number; 
-    }
+}
