@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ListGroup, Image } from "react-bootstrap";
 import { VscGraph } from "react-icons/vsc";
 import { FaCog, FaDollarSign, FaSignOutAlt, FaMoneyBill } from "react-icons/fa";
 //import "./BarraLateral.css"; // Asegúrate de tener este archivo para estilos personalizados
 
+
 const BarraLateral: React.FC = () => {
+
+  const [nombreUsuario, setNombreUsuario] = useState<string | null>(null);
+
+  useEffect(() => {
+    cargarNombreUsuario();
+  }, []);
+
+
+  //Agarrando el nombre del usuario de la sesión actual
+  const cargarNombreUsuario = () => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setNombreUsuario(user.name); 
+    }
+  };
+
   return (
       <div className="sidebar d-flex flex-column p-3">
         <Image
@@ -14,7 +32,9 @@ const BarraLateral: React.FC = () => {
         className="mb-3"
         />
 
-        <h5 className="text-center">Lionel Messi</h5>
+
+
+        <h5 className="text-center"> { nombreUsuario } </h5>
         <ListGroup variant="flush">
 
         <ListGroup.Item
