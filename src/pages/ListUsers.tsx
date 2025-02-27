@@ -9,7 +9,7 @@ import DeleteUserModal from "./DeleteUserModal"
 import FilterUserModal from "./FilterUserModal"
 import AddUserModal, { Role } from "./AddUserModal"
 
-const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000"
+const URL_BACKEND = "http://localhost:5000"
 
 export interface ListUserItem {
     id: number
@@ -66,7 +66,7 @@ const ListUsers = () => {
         const resp = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
-               nombre : user.name,
+               name : user.name,
                email : user.email,
                password_hash : user.password_hash,
                role_id : user.role_id
