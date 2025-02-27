@@ -12,8 +12,8 @@ interface EditUserModalProps {
 
 const EditUserModal = (props : EditUserModalProps) => {
     const [userData, setUserData] = useState({
-        name: props.user.name,
-        email: props.user.email,
+        name: props.user.name ?? "",
+        email: props.user.email ?? "",
         password_hash: "",
         role_id: props.user.role_id
     })

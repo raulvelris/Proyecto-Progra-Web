@@ -63,6 +63,7 @@ const ListUsers = () => {
 
     const httpAddUser = async (user : User) => {
         const url = URL_BACKEND + "/admin/users"
+        console.log(user.name)
         const resp = await fetch(url, {
             method: "POST",
             body: JSON.stringify({

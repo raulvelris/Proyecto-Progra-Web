@@ -107,4 +107,8 @@ const Graficos: React.FC = () => {
   );
 };
 
+<<<<<<< HEAD
 export default Graficos;
+=======
+export default Graficos;
+>>>>>>> f7b1de2eb5a9ef0ee11a51c2bb0461473552a872
