@@ -8,6 +8,9 @@ import EliminarGasto from "./EliminarGasto";
 import { obtenerCategorias, CategoriaTipo } from "../services/CategoryService";
 import EditarGasto from "./EditarGasto";
 import { addAccessLog } from "./Login";
+import { obtenerPresupuestos } from "../services/BudgetsService";
+import AdvertenciaExcesoModal from "../components/AdvertenciaExcesoModal";
+import { BudgetsTipo } from "../types/BudgetsTipo";
 
 // Función para parsear fechas "YYYY-MM-DD" sin zona horaria
 function parseDateYMD(dateStr: string): Date {
@@ -18,6 +21,7 @@ function parseDateYMD(dateStr: string): Date {
 function Gastos() {
   const [lista, setLista] = useState<GastoTipo[]>([]);
   const [categorias, setCategorias] = useState<CategoriaTipo[]>([]);
+  const [presupuestos, setPresupuestos] = useState<Pick<BudgetsTipo, 'monthly_budget' | 'category_id'>[]>([]);
 
   // Filtros
   const [filtroCategoria, setFiltroCategoria] = useState("");
@@ -32,19 +36,23 @@ function Gastos() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [warningData, setWarningData] = useState<{ categoria: string; presupuesto: number; gastoActual: number } | null>(null);
 
-  // Ordenamiento (tres estados: "none", "asc", "desc")
+  // Ordenamiento
   const [sortedColumn, setSortedColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc" | "none">("none");
 
   useEffect(() => {
     cargarGastos();
     cargarCategorias();
+    cargarPresupuestos();
   }, []);
 
   async function cargarGastos() {
     const gastosBD = await obtenerGastos();
     setLista(gastosBD);
+    return gastosBD; // Devuelve la lista para usarla inmediatamente si es necesario
   }
 
   async function cargarCategorias() {
@@ -52,16 +60,44 @@ function Gastos() {
     setCategorias(cats);
   }
 
-  // Mapea category_id => nombre
+  async function cargarPresupuestos() {
+    const presupuestosBD = await obtenerPresupuestos();
+    setPresupuestos(presupuestosBD);
+  }
+
   function getCategoryName(catId: number): string {
     const cat = categorias.find((c) => c.id === catId);
     return cat ? cat.name : String(catId);
   }
 
-  // Mapea nombre => category_id (para filtrar)
   function getCategoryIdByName(name: string): number | null {
     const cat = categorias.find((c) => c.name === name);
     return cat ? cat.id : null;
+  }
+
+  function verificarPresupuesto(gastos: GastoTipo[], categoriaId: number) {
+    // Calcular el gasto total para la categoría específica
+    const gastoActual = gastos
+      .filter((g) => g.category_id === categoriaId)
+      .reduce((sum, g) => sum + g.amount, 0);
+
+    // Encontrar el presupuesto para esta categoría
+    const presupuesto = presupuestos.find((p) => p.category_id === categoriaId);
+
+    // Verificar si el gasto actual es >= 80% del presupuesto
+    if (presupuesto && gastoActual >= presupuesto.monthly_budget * 0.8) {
+      setWarningData({
+        categoria: getCategoryName(categoriaId),
+        presupuesto: presupuesto.monthly_budget,
+        gastoActual,
+      });
+      setShowWarning(true);
+    }
+  }
+
+  const cerrarAdvertencia = () => {
+    setShowWarning(false);
+    setWarningData(null);
   }
 
   // Función para manejar ordenamiento al hacer clic en un encabezado
@@ -164,7 +200,7 @@ function Gastos() {
     setIsAddModalOpen(true);
   }
 
-  // Función existente para agregar gasto (con addAccessLog)
+  // Función para agregar gasto
   const addGastoHandler = async (
     ng_fecha: string,
     ng_categoria: number,
@@ -199,9 +235,9 @@ function Gastos() {
     });
     const data = await resp.json();
 
-    if (data.msg == "") {
-      console.log(data.gasto);
-      await cargarGastos();
+    if (data.msg === "") {
+      const gastosActualizados = await cargarGastos(); // Recargar la lista de gastos
+      verificarPresupuesto(gastosActualizados, ng_categoria); // Verificar solo la categoría afectada
     } else {
       console.log("Error al agregar gasto");
     }
@@ -210,6 +246,16 @@ function Gastos() {
   return (
     <div className="container mt-4">
       <h2>Mis Gastos</h2>
+      {showWarning && warningData && (
+        <AdvertenciaExcesoModal
+          showModal={showWarning}
+          closeModal={cerrarAdvertencia}
+          categoria={warningData.categoria}
+          presupuesto={warningData.presupuesto}
+          gastoActual={warningData.gastoActual}
+        />
+      )}
+
       <div className="d-flex justify-content-between align-items-center my-3">
         <FiltroGastos
           filtroCategoria={filtroCategoria}
@@ -302,15 +348,15 @@ function Gastos() {
 
       {/* Editar Modal */}
       {isEditModalOpen && selectedGasto && (
-  <EditarGasto
-    id={selectedGasto.id} // Enviar solo el ID
-    onClose={() => setIsEditModalOpen(false)}
-    onUpdate={() => {
-      cargarGastos();
-      setIsEditModalOpen(false);
-    }}
-  />
-)}
+        <EditarGasto
+          id={selectedGasto.id}
+          onClose={() => setIsEditModalOpen(false)}
+          onUpdate={() => {
+            cargarGastos();
+            setIsEditModalOpen(false);
+          }}
+        />
+      )}
 
       {/* Eliminar Modal */}
       {isDeleteModalOpen && selectedGasto && (
@@ -339,4 +385,5 @@ function Gastos() {
     </div>
   );
 }
+
 export default Gastos;
