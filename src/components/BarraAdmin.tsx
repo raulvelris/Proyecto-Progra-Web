@@ -4,8 +4,7 @@ import { ListGroup, Image } from "react-bootstrap";
 import { VscGraph } from "react-icons/vsc";
 import { FaUsers, FaHistory, FaCog, FaSignOutAlt } from "react-icons/fa";
 
-const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
-
+const URL_BACKEND = import.meta.env.VITE_API_URL;
 interface User {
     id: number;
     name: string;

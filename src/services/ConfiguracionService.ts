@@ -28,7 +28,7 @@ export async function fetchConfiguracionBackend(): Promise<ConfiguracionTipo> {
     token = JSON.parse(userStr).token;
   }
 
-  const resp = await fetch("http://localhost:5000/perfil", {
+  const resp = await fetch(import.meta.env.VITE_API_URL + "/perfil", {
     headers: { Authorization: `Bearer ${token}` }
   });
   const data = await resp.json();
@@ -58,7 +58,7 @@ export async function updateConfiguracionBackend(conf: ConfiguracionTipo): Promi
     password: conf.password // si no quieres cambiar la pass, envía ""
   };
 
-  const resp = await fetch("http://localhost:5000/perfil", {
+  const resp = await fetch(import.meta.env.VITE_API_URL + "/perfil", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

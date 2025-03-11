@@ -28,7 +28,7 @@ const RecuperarContraseña = () => {
     const userData = { email: email, password: password, rw_password: rw_password }
 
     //Hace la petición http POST
-    const resp = await fetch("http://localhost:5000/reset-password/", {
+    const resp = await fetch(import.meta.env.VITE_API_URL + "/reset-password/", {
         method : "POST",
         body : JSON.stringify(userData),
         headers: {

@@ -1,6 +1,6 @@
 import { PresupuestoTipo } from "../types/PresupuestoTipo";
 
-const API_URL = "http://localhost:5000/budgets"; // Ajusta tu puerto/URL
+const API_URL = import.meta.env.VITE_API_URL + "/budgets"; // Ajusta tu puerto/URL
 
 // 1) Obtener todos los presupuestos
 export async function obtenerPresupuestos(): Promise<PresupuestoTipo[]> {

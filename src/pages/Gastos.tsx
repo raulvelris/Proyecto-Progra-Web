@@ -225,7 +225,7 @@ function Gastos() {
       token = userInfo.token;
     }
 
-    const resp = await fetch("http://localhost:5000/add-gasto", {
+    const resp = await fetch(import.meta.env.VITE_API_URL + "/add-gasto", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

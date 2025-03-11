@@ -72,7 +72,7 @@ function Presupuestos() {
             token = userInfo.token;
         }
 
-        const resp = await fetch('http://localhost:5000/add-presupuesto', {
+        const resp = await fetch(import.meta.env.VITE_API_URL + "/add-presupuesto", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

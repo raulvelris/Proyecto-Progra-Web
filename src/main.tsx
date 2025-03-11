@@ -13,7 +13,7 @@ import './index.css'
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter basename='/proyecto-pw'>
+    <BrowserRouter basename='/Proyecto-Progra-Web'>
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/recuperar-contraseña" element={<RecuperarContraseña />} />

@@ -8,7 +8,7 @@ import { BudgetsTipo } from "../types/BudgetsTipo";
         token = JSON.parse(userStr).token;
     }
 
-    const resp = await fetch("http://localhost:5000/budgets", {
+    const resp = await fetch(import.meta.env.VITE_API_URL + "/budgets", {
         headers: { Authorization: `Bearer ${token}` }
     });
 

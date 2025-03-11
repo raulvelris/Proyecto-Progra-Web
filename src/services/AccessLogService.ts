@@ -2,7 +2,7 @@
 export const getAccessLogs = async () => {
     let res: any;
     try {
-        res = await fetch("http://localhost:5000/accesslogs"); 
+        res = await fetch(import.meta.env.VITE_API_URL + "/accesslogs"); 
     } catch (e) {
         console.log(e);
     }

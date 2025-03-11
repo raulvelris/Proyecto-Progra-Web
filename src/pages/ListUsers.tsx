@@ -9,7 +9,7 @@ import DeleteUserModal from "./DeleteUserModal"
 import FilterUserModal from "./FilterUserModal"
 import AddUserModal, { Role } from "./AddUserModal"
 
-const URL_BACKEND = "http://localhost:5000"
+const URL_BACKEND = import.meta.env.VITE_API_URL
 
 export interface ListUserItem {
     id: number

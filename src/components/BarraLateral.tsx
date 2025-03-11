@@ -5,7 +5,7 @@ import { VscGraph } from "react-icons/vsc";
 import { FaCog, FaDollarSign, FaSignOutAlt, FaMoneyBill } from "react-icons/fa";
 //import "./BarraLateral.css"; // Asegúrate de tener este archivo para estilos personalizados
 
-const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
+const URL_BACKEND = import.meta.env.VITE_API_URL ;
 
 interface User {
     id: number;

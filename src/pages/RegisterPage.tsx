@@ -31,8 +31,8 @@ const RegisterPage = () => {
             email: register_email,
             password: register_pswd
         }
-
-        const resp = await fetch('http://localhost:5000/register/', {
+        
+        const resp = await fetch(import.meta.env.VITE_API_URL + "/register/", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,9 +49,9 @@ const RegisterPage = () => {
         }
     }
 
-    
+
     const sendEmail = async () => {
-        const mainpage = 'http://localhost:5173/app/dashboard';
+        const mainpage = import.meta.env.VITE_API_URL + "/app/dashboard";
 
         const text = `
             <p>Hello,</p>
@@ -62,7 +62,7 @@ const RegisterPage = () => {
         `;
 
         try {
-            const response = await fetch('http://localhost:5000/register/send-email', {
+            const response = await fetch(import.meta.env.VITE_API_URL + "/register/send-email", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

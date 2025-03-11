@@ -3,7 +3,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 
-const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
+const URL_BACKEND = import.meta.env.VITE_API_URL;
 
 Chart.register(...registerables);
 

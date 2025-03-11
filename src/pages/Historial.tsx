@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table } from "react-bootstrap";
 
-const URL_BACKEND = import.meta.env.VITE_URL_BACKEND || "http://localhost:5000";
+const URL_BACKEND = import.meta.env.VITE_API_URL;
 
 export interface AccessLog {
     id: number;
@@ -35,56 +35,6 @@ const Historial = () => {
         }
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
     useEffect(() => {
         fetchLogs();
     }, []);

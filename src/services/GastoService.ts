@@ -1,7 +1,7 @@
 // src/services/GastoService.ts
 import { GastoTipo } from "../types/GastoTipo";
 
-const API_URL = "http://localhost:5000/expenses"; // Ajusta tu puerto/URL
+const API_URL = import.meta.env.VITE_API_URL + "/expenses";
 
 // 1) Obtener todos los gastos
 export async function obtenerGastos(): Promise<GastoTipo[]> {
@@ -58,7 +58,7 @@ export async function editGasto(g: GastoTipo): Promise<void> {
   if (userStr) {
     token = JSON.parse(userStr).token;
   }
-  await fetch("http://localhost:5000/edit-expenses/", {
+  await fetch(import.meta.env.VITE_API_URL + "/edit-expenses/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
